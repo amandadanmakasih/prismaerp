@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submodul Pelanggan - PRISMA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    /* Custom scrollbar for sidebar */
+
+    body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #14b8a6; /* teal-500 */
+      border-radius: 3px;
+    }
+    /* Button icon margin */
+    .btn-icon {
+      margin-right: 0.3rem;
+      vertical-align: middle;
+    }
+    /* Table cell vertical alignment */
+    td, th {
+      vertical-align: middle;
+    }
+    /* Hide default number input arrows */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+  <!-- Main Content -->
+  <main class="flex-grow p-8 overflow-auto">
+
+    <h1 class="text-2xl font-bold mb-6 select-none">Pelanggan</h1>
+
+    <!-- Search & Add Button -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center border border-gray-300 rounded shadow-sm overflow-hidden w-full max-w-md">
+        <input 
+          type="text" 
+          placeholder="Cari pelanggan..." 
+          class="flex-grow px-4 py-2 focus:outline-none" 
+          id="searchInput" 
+          aria-label="Cari pelanggan"
+        />
+        <button 
+          id="addCustomerBtn" 
+          class="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"
+          aria-label="Tambah pelanggan baru"
+        >
+          <i class="fas fa-plus text-xs"></i>
+          Tambah Pelanggan
+        </button>
+      </div>
+    </div>
+    
+    <!-- Table Pelanggan -->
+    <section class="overflow-x-auto border border-gray-200 rounded shadow-sm">
+      <table class="w-full border-collapse">
+        <thead class="bg-gray-50 text-gray-700 font-semibold text-left">
+          <tr>
+            <th class="px-4 py-3">Nama Pelanggan</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">Telepon</th>
+            <th class="px-4 py-3">Alamat</th>
+            <th class="px-4 py-3 text-center" style="min-width:100px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="customerTableBody" class="divide-y divide-gray-200">
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-2">PT. Maju Jaya</td>
+            <td class="px-4 py-2">kontak@majuyaya.co.id</td>
+            <td class="px-4 py-2">081234567890</td>
+            <td class="px-4 py-2">Jl. Merdeka No. 7, Jakarta</td>
+            <td class="px-4 py-2 text-center">
+              <button aria-label="Edit PT. Maju Jaya" class="text-teal-600 hover:text-teal-800 mr-3 focus:outline-none" title="Edit Pelanggan">
+                <svg class="inline w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                  viewBox="0 0 24 24">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+                </svg>
+              </button>
+              <button aria-label="Hapus PT. Maju Jaya" class="text-red-600 hover:text-red-800 focus:outline-none" title="Hapus Pelanggan">
+                <svg class="inline w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                  viewBox="0 0 24 24">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                  <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <!-- More rows could be dynamically added -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Modal Add/Edit Customer -->
+    <div id="customerModal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 hidden" aria-modal="true" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+      <div class="bg-white rounded-lg shadow-lg max-w-lg w-full mx-4">
+        <header class="flex justify-between items-center border-b border-gray-200 py-3 px-6">
+          <h2 id="modalTitle" class="font-bold text-lg text-teal-600">Tambah Pelanggan</h2>
+          <button id="closeModalBtn" aria-label="Tutup modal" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </header>
+        <form id="customerForm" class="p-6 space-y-4" aria-describedby="modalDesc">
+          <p id="modalDesc" class="text-gray-600 text-sm">Isi informasi pelanggan di bawah ini.</p>
+          <div>
+            <label for="customerName" class="block mb-1 font-semibold text-gray-700">Nama Pelanggan</label>
+            <input id="customerName" name="customerName" placeholder="Nama pelanggan" required
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label for="customerEmail" class="block mb-1 font-semibold text-gray-700">Email</label>
+            <input id="customerEmail" name="customerEmail" type="email" placeholder="email@contoh.com"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label for="customerPhone" class="block mb-1 font-semibold text-gray-700">Telepon</label>
+            <input id="customerPhone" name="customerPhone" type="tel" placeholder="081234567890"
+              pattern="[0-9+ ]*" 
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+          </div>
+          <div>
+            <label for="customerAddress" class="block mb-1 font-semibold text-gray-700">Alamat</label>
+            <textarea id="customerAddress" name="customerAddress" placeholder="Alamat lengkap pelanggan" rows="3"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+          </div>
+          <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+            <button type="button" id="modalCancelBtn" class="px-4 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 focus:outline-none">Batal</button>
+            <button type="submit" class="px-4 py-2 rounded bg-teal-600 text-white font-semibold hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // DOM elements
+    const modal = document.getElementById('customerModal');
+    const addBtn = document.getElementById('addCustomerBtn');
+    const closeBtn = document.getElementById('closeModalBtn');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+    const form = document.getElementById('customerForm');
+    const tbody = document.getElementById('customerTableBody');
+    const searchInput = document.getElementById('searchInput');
+    const modalTitle = document.getElementById('modalTitle');
+
+    // State
+    let editRow = null;
+
+    // Open modal in add mode
+    addBtn.addEventListener('click', () => {
+      modalTitle.textContent = 'Tambah Pelanggan';
+      form.reset();
+      editRow = null;
+      modal.classList.remove('hidden');
+      document.getElementById('customerName').focus();
+    });
+
+    // Close modal function
+    function closeModal() {
+      modal.classList.add('hidden');
+      editRow = null;
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => {
+      if(e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+    });
+
+    // Add or edit customer
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const name = form.customerName.value.trim();
+      const email = form.customerEmail.value.trim();
+      const phone = form.customerPhone.value.trim();
+      const address = form.customerAddress.value.trim();
+
+      if(!name) return alert('Nama pelanggan wajib diisi.');
+
+      if(editRow) {
+        // Edit existing row
+        const cells = editRow.querySelectorAll('td');
+        cells[0].textContent = name;
+        cells[1].textContent = email;
+        cells[2].textContent = phone;
+        cells[3].textContent = address;
+      } else {
+        // Create new row
+        const tr = document.createElement('tr');
+        tr.classList.add('hover:bg-gray-50');
+        tr.innerHTML = `
+          <td class="px-4 py-2">${name}</td>
+          <td class="px-4 py-2">${email}</td>
+          <td class="px-4 py-2">${phone}</td>
+          <td class="px-4 py-2">${address}</td>
+          <td class="px-4 py-2 text-center">
+            <button aria-label="Edit ${name}" class="text-teal-600 hover:text-teal-800 mr-3 focus:outline-none" title="Edit Pelanggan">
+              <svg class="inline w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+              viewBox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path></svg>
+            </button>
+            <button aria-label="Hapus ${name}" class="text-red-600 hover:text-red-800 focus:outline-none" title="Hapus Pelanggan">
+              <svg class="inline w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+              viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      closeModal();
+      form.reset();
+    });
+
+    // Delegate edit/delete buttons in table
+    tbody.addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+
+      const tr = btn.closest('tr');
+      if(!tr) return;
+
+      if(btn.title === 'Edit Pelanggan') {
+        editRow = tr;
+        // Fill form with row data
+        const cells = tr.querySelectorAll('td');
+        form.customerName.value = cells[0].textContent;
+        form.customerEmail.value = cells[1].textContent;
+        form.customerPhone.value = cells[2].textContent;
+        form.customerAddress.value = cells[3].textContent;
+
+        modalTitle.textContent = 'Edit Pelanggan';
+        modal.classList.remove('hidden');
+        document.getElementById('customerName').focus();
+
+      } else if (btn.title === 'Hapus Pelanggan') {
+        if(confirm(`Hapus pelanggan "${tr.querySelector('td').textContent}"?`)) {
+          tr.remove();
+        }
+      }
+    });
+
+    // Search filter
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      Array.from(tbody.children).forEach(tr => {
+        const text = tr.textContent.toLowerCase();
+        if(text.indexOf(filter) > -1) {
+          tr.style.display = '';
+        } else {
+          tr.style.display = 'none';
+        }
+      });
+    });
+  </script>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+        });
+
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleInventoryMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+</script>
+</body>
+</html>
+

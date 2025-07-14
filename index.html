@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Page Navigation Example</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            background-color: #00a8a8;
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #f4f7fa;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #f4f7fa;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Page Content Styles */
+        .page {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 500px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #00a8a8;
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                background-color: #00a8a8;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem 0;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links li {
+                margin: 1rem 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">PRISMA ERP</div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="login erp.html" data-page="home">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Page Content - This will be dynamically updated -->
+    <div class="page" id="pageContent">
+        <h1>Selamat Datang di PRISMA ERP</h1>
+        <p>PRISMA ERP adalah sistem manajemen sumber daya perusahaan yang dirancang untuk membantu bisnis Anda mengelola operasi sehari-hari dengan lebih efisien. Dengan antarmuka yang intuitif dan fitur yang kuat, PRISMA ERP memungkinkan Anda untuk mengintegrasikan berbagai fungsi bisnis dalam satu platform.</p>
+        <img src="logo_prisma.png" alt="LOGO PRISMA" style="display: block; margin: 0 auto; max-width: 100%; height: auto;"/>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 PRISMA. All rights reserved.</p> 
+    </footer>
+    
+    <script>
+        // DOM Elements
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const pageContent = document.getElementById('pageContent');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinksContainer = document.getElementById('navLinks');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set the default page (home)
+            pageContent.innerHTML = pages.home;
+            
+            // Add click event listeners to all navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageName = this.getAttribute('data-page');
+                    navigateTo(pageName);
+                    
+                    // Close mobile menu if open
+                    navLinksContainer.classList.remove('active');
+                });
+            });
+            
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinksContainer.classList.toggle('active');
+            });
+        });
+        
+        // Navigation function
+        function navigateTo(pageName) {
+            // Update page content
+            pageContent.innerHTML = pages[pageName];
+            
+            // Scroll to top of page
+            window.scrollTo(0, 0);
+            
+            // Update active link in navigation
+            navLinks.forEach(link => {
+                link.style.color = link.getAttribute('data-page') === pageName ? '#3498db' : 'white';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRISMA ERP - New Order</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+            color: #F4F7FA !important;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .kanban-card {
+            transition: all 0.3s ease;
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+  <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+       <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header class="bg-white border-b border-gray-200 py-3 px-6 flex items-center justify-between">
+        <h2 class="text-2xl font-extrabold text-slate-900 mb-2">Pesanan Baru</h2>
+      </header>
+      <p class="text-slate-600 mx-6 mt-4 mb-6">
+        Buat pesanan baru untuk pelanggan Anda. Isi detail pesanan dan tambahkan item yang diperlukan.
+      </p>
+      <form id="newOrderForm" class="bg-white rounded-md shadow p-6 space-y-6" autocomplete="off" novalidate>
+        <section>
+          <h2 class="font-semibold mb-3 border-b border-slate-200 pb-2 text-slate-700">Detail Pesanan</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label for="orderNumber" class="block text-sm font-medium text-slate-700 mb-1">Nomor Pesanan</label>
+              <input type="text" id="orderNumber" name="orderNumber" class="w-full rounded border border-slate-300 py-2 px-3 text-sm text-slate-900 focus:ring-2 focus:ring-teal-500" placeholder="SO-2025-006" required />
+              <p class="mt-1 text-xs text-red-500 hidden" id="orderNumberError">Silahkan masukkan nomor pesanan</p>
+            </div>
+            <div>
+              <label for="orderDate" class="block text-sm font-medium text-slate-700 mb-1">Tanggal Pesanan</label>
+              <input type="date" id="orderDate" name="orderDate" class="w-full rounded border border-slate-300 py-2 px-3 text-sm text-slate-900 focus:ring-2 focus:ring-teal-500" required />
+              <p class="mt-1 text-xs text-red-500 hidden" id="orderDateError">Silahkan pilih tanggal pesanan</p>
+            </div>
+            <div>
+              <label for="status" class="block text-sm font-medium text-slate-700 mb-1">Status</label>
+              <select id="status" name="status" class="w-full rounded border border-slate-300 py-2 px-3 text-sm text-slate-900 bg-white focus:ring-2 focus:ring-teal-500" required>
+                <option value="" disabled selected>Pilih status</option>
+                <option value="Selesai">Selesai</option>
+                <option value="Proses">Proses</option>
+                <option value="Menunggu">Menunggu</option>
+                <option value="Batal">Batal</option>
+              </select>
+              <p class="mt-1 text-xs text-red-500 hidden" id="statusError">Silahkan pilih status</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="font-semibold mb-3 border-b border-slate-200 pb-2 text-slate-700">Informasi Pelanggan</h2>
+          <div>
+            <label for="customerName" class="block text-sm font-medium text-slate-700 mb-1">Pelanggan</label>
+            <input type="text" id="customerName" name="customerName" list="customerList" placeholder="Silahkan masukkan nama pelanggan..." class="w-full rounded border border-slate-300 py-2 px-3 text-sm text-slate-900 focus:ring-2 focus:ring-teal-500" required autocomplete="off" />
+            <datalist id="customerList">
+              <option value="PT. Maju Jaya"/>
+              <option value="CV. Abadi Sentosa"/>
+              <option value="Toko Sumber Rejeki"/>
+              <option value="UD. Makmur Jaya"/>
+              <option value="PT. Global Teknologi"/>
+            </datalist>
+            <p class="mt-1 text-xs text-red-500 hidden" id="customerNameError">Silahkan masukkan nama pelanggan</p>
+          </div>
+        </section>
+
+        <section>
+          <h2 class="font-semibold mb-3 border-b border-slate-200 pb-2 text-slate-700">Item Pesanan</h2>
+          <div class="overflow-x-auto rounded border border-slate-200">
+            <table class="w-full text-sm text-left text-slate-900">
+              <thead class="bg-slate-100">
+                <tr>
+                  <th class="p-3 border-b border-slate-200 w-8">#</th>
+                  <th class="p-3 border-b border-slate-200 text-center w-48">Produk</th>
+                  <th class="p-3 border-b border-slate-200 text-center w-28">Jumlah</th>
+                  <th class="p-3 border-b border-slate-200 text-center w-28">Harga (Rp)</th>
+                  <th class="p-3 border-b border-slate-200 text-center w-28">Subtotal (Rp)</th>
+                  <th class="p-3 border-b border-slate-200 text-center w-20">Action</th>
+                </tr>
+              </thead>
+              <tbody id="orderItemsBody" class="">
+                <tr>
+                  <td class="p-3 border-b border-slate-200 text-left">1</td>
+                  <td class="p-3 border-b border-slate-200 align-middle">
+                    <input type="text" name="product" list="productList" placeholder="Pilih produk..." class="w-full rounded border border-slate-300 py-1 px-2 text-sm" required />
+                  </td>
+                  <td class="p-3 border-b border-slate-200 text-right align-middle">
+                    <input type="number" name="quantity" min="1" value="1" class="w-full rounded border border-slate-300 py-1 px-2 text-sm text-right" required />
+                  </td>
+                  <td class="p-3 border-b border-slate-200 text-right align-middle">
+                    <input type="number" name="price" min="0" step="1000" value="0" class="w-full rounded border border-slate-300 py-1 px-2 text-sm text-right" required />
+                  </td>
+                  <td class="p-3 border-b border-slate-200 text-center font-semibold align-middle">0</td>
+                  <td class="p-3 border-b border-slate-200 text-center align-middle">
+                    <button type="button" class="text-red-600 hover:text-red-900 delete-item" title="Delete Item" aria-label="Delete Item">&times;</button>
+                  </td>
+                </tr>
+              </tbody>
+              <datalist id="productList">
+                <option value="Produk A - Widget"/>
+                <option value="Produk B - Gadget"/>
+                <option value="Produk C - Component"/>
+                <option value="Produk D - Service"/>
+              </datalist>
+            </table>
+          </div>
+          <div class="pt-3 flex items-center justify-between space-x-2">
+            <button type="button" id="addItemBtn" class="flex items-center gap-1 px-3 py-1 text-teal-700 border border-teal-700 rounded hover:bg-teal-700 hover:text-white transition" aria-label="Add new order item">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round">
+                <path d="M12 5v14m7-7H5"/>
+              </svg>
+              Tambah item
+            </button>
+            <div class="text-lg font-semibold text-slate-900" aria-live="polite" aria-atomic="true">Total: Rp <span id="totalPrice">0</span></div>
+          </div>
+        </section>
+
+        <div class="flex justify-end gap-4 mt-6">
+          <button type="reset" class="px-6 py-2 text-slate-700 border border-slate-400 rounded hover:bg-slate-100 transition">Reset</button>
+          <button type="submit" class="px-6 py-2 bg-teal-700 text-white rounded hover:bg-teal-800 transition">Simpan Pesanan</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const form = document.getElementById("newOrderForm");
+      const orderItemsBody = document.getElementById("orderItemsBody");
+      const addItemBtn = document.getElementById("addItemBtn");
+      const totalPriceSpan = document.getElementById("totalPrice");
+
+      // Calculate subtotal for a row
+      function calculateRowSubtotal(row) {
+        const qtyInput = row.querySelector('input[name="quantity"]');
+        const priceInput = row.querySelector('input[name="price"]');
+        const subtotalCell = row.querySelector("td:nth-child(5)");
+
+        let qty = parseInt(qtyInput.value, 10);
+        let price = parseInt(priceInput.value, 10);
+        if (isNaN(qty) || qty < 1) qty = 1;
+        if (isNaN(price) || price < 0) price = 0;
+
+        const subtotal = qty * price;
+        subtotalCell.textContent = subtotal.toLocaleString("id-ID");
+        return subtotal;
+      }
+
+      // Recalculate full order total
+      function recalculateTotal() {
+        let total = 0;
+        orderItemsBody.querySelectorAll("tr").forEach(row => {
+          total += calculateRowSubtotal(row);
+        });
+        totalPriceSpan.textContent = total.toLocaleString("id-ID");
+      }
+
+      // Add new item line
+      function addNewItemRow() {
+        const rowCount = orderItemsBody.querySelectorAll("tr").length;
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td class="p-3 border-b border-slate-200 text-center">${rowCount + 1}</td>
+          <td class="p-3 border-b border-slate-200">
+            <input type="text" name="product" list="productList" placeholder="Select product..." class="w-full rounded border border-slate-300 py-1 px-2 text-sm" required />
+          </td>
+          <td class="p-3 border-b border-slate-200">
+            <input type="number" name="quantity" min="1" value="1" class="w-full rounded border border-slate-300 py-1 px-2 text-sm text-right" required />
+          </td>
+          <td class="p-3 border-b border-slate-200">
+            <input type="number" name="price" min="0" step="1000" value="0" class="w-full rounded border border-slate-300 py-1 px-2 text-sm text-right" required />
+          </td>
+          <td class="p-3 border-b border-slate-200 text-right font-semibold">0</td>
+          <td class="p-3 border-b border-slate-200 text-center">
+            <button type="button" class="text-red-600 hover:text-red-900 delete-item" title="Delete Item" aria-label="Delete Item">&times;</button>
+          </td>
+        `;
+        orderItemsBody.appendChild(newRow);
+        attachRowListeners(newRow);
+      }
+
+      // Update row indices after delete
+      function updateRowIndices() {
+        orderItemsBody.querySelectorAll("tr").forEach((row, index) => {
+          row.querySelector("td:first-child").textContent = index + 1;
+        });
+      }
+
+      // Attach event listeners on row inputs and delete button
+      function attachRowListeners(row) {
+        const qtyInput = row.querySelector('input[name="quantity"]');
+        const priceInput = row.querySelector('input[name="price"]');
+        const deleteBtn = row.querySelector(".delete-item");
+
+        function onInputChange() {
+          calculateRowSubtotal(row);
+          recalculateTotal();
+        }
+
+        qtyInput.addEventListener("input", onInputChange);
+        priceInput.addEventListener("input", onInputChange);
+
+        deleteBtn.addEventListener("click", () => {
+          if (orderItemsBody.querySelectorAll("tr").length > 1) {
+            row.remove();
+            updateRowIndices();
+            recalculateTotal();
+          } else {
+            alert("At least one item is required.");
+          }
+        });
+      }
+
+      // Initial setup
+      orderItemsBody.querySelectorAll("tr").forEach(row => {
+        attachRowListeners(row);
+      });
+      recalculateTotal();
+
+      addItemBtn.addEventListener("click", () => {
+        addNewItemRow();
+      });
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Basic form validation
+        let isValid = true;
+
+        const orderNumber = form.orderNumber.value.trim();
+        const orderDate = form.orderDate.value;
+        const status = form.status.value;
+        const customerName = form.customerName.value.trim();
+
+        // Show/hide error messages
+        function toggleError(fieldId, condition) {
+          const el = document.getElementById(fieldId);
+          if (condition) {
+            el.classList.remove("hidden");
+            isValid = false;
+          } else {
+            el.classList.add("hidden");
+          }
+        }
+
+        toggleError("orderNumberError", orderNumber === "");
+        toggleError("orderDateError", orderDate === "");
+        toggleError("statusError", status === "");
+        toggleError("customerNameError", customerName === "");
+
+        // Validate order items
+        const rows = orderItemsBody.querySelectorAll("tr");
+        rows.forEach(row => {
+          const productInput = row.querySelector('input[name="product"]');
+          const qtyInput = row.querySelector('input[name="quantity"]');
+          const priceInput = row.querySelector('input[name="price"]');
+
+          if (!productInput.value.trim()) {
+            productInput.classList.add("border-red-500");
+            isValid = false;
+          } else {
+            productInput.classList.remove("border-red-500");
+          }
+          if (!qtyInput.value || qtyInput.value <= 0) {
+            qtyInput.classList.add("border-red-500");
+            isValid = false;
+          } else {
+            qtyInput.classList.remove("border-red-500");
+          }
+          if (!priceInput.value || priceInput.value < 0) {
+            priceInput.classList.add("border-red-500");
+            isValid = false;
+          } else {
+            priceInput.classList.remove("border-red-500");
+          }
+        });
+
+        if (!isValid) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+
+        // Construct order object for demonstration (would send to API/backend)
+        const order = {
+          orderNumber,
+          orderDate,
+          status,
+          customerName,
+          items: Array.from(rows).map(row => ({
+            product: row.querySelector('input[name="product"]').value.trim(),
+            quantity: parseInt(row.querySelector('input[name="quantity"]').value, 10),
+            price: parseInt(row.querySelector('input[name="price"]').value, 10)
+          }))
+        };
+
+        alert(`New Order Created:\n\n${JSON.stringify(order, null, 2)}`);
+        form.reset();
+        // Reset to one order item line
+        orderItemsBody.innerHTML = "";
+        addNewItemRow();
+        recalculateTotal();
+      });
+    })();
+  </script>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        const salesSubmenuItems = document.querySelectorAll('#salesSubmenu .sidebar-item');
+        salesSubmenuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            salesSubmenuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            e.stopPropagation(); 
+          })
+        });
+      
+            salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+        });
+
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleInventoryMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+</script>
+</body>
+</html>

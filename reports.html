@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - PRISMA </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .kanban-card {
+            transition: all 0.3s ease;
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .active-tab {
+            border-bottom: 3px solid #00a8a8;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .chart-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .report-card {
+            transition: transform 0.2s;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 p-6 bg-gray-100 overflow-y-auto">  
+        <!-- Header -->
+        <header class="mb-6">
+            <div class="flex items-center">
+            <h2 class="text-2xl font-bold text-slate-600">Dashboard Laporan</h2>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <div class="mb-6 border-b border-gray-200">
+            <nav class="-mb-px flex space-x-8">
+                <button onclick="openTab(event, 'sales')" class="tab-button py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 text-[#00a8a8] border-[#00a8a8]">
+                    <i class="fas fa-shopping-cart text-teal-600"></i>
+                    <span>Laporan Sales</span>
+                </button>
+                <button onclick="openTab(event, 'inventory')" class="tab-button py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 text-gray-500 hover:text-[#00a8a8] hover:border-[#00a8a8]">
+                    <i class="fas fa-box text-gray-500"></i>
+                    <span>Laporan Inventory</span>
+                </button>
+                <button onclick="openTab(event, 'procurement')" class="tab-button py-4 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 text-gray-500 hover:text-[#00a8a8] hover:border-[#00a8a8]">
+                    <i class="fas fa-shopping-bag text-gray-500"></i>
+                    <span>Laporan Procurement</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Tab Contents -->
+        <!-- Sales Tab -->
+        <div id="sales" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Summary Cards -->
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00a8a8]">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Total Penjualan</p>
+                            <h3 class="text-2xl font-bold">Rp2.06M</h3>
+                            <p class="text-sm text-green-600">↑ 12% dari bulan lalu</p>
+                        </div>
+                        <div class="bg-[#00a8a8]/10 p-3 rounded-full">
+                            <i class="fas fa-dollar-sign text-x1 text-[#00a8a8]"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Pesanan</p>
+                            <h3 class="text-2xl font-bold">1,342</h3>
+                            <p class="text-sm text-green-600">↑ 8% dari bulan lalu</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                           <i class="fas fa-shopping-cart text-x1 text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Produk Teratas</p>
+                            <h3 class="text-2xl font-bold">Premium Widget</h3>
+                            <p class="text-sm text-gray-500">Terjual 350 unit</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-star text-x1 text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Tren Penjualan Bulanan</h3>
+                    <canvas id="salesChart"></canvas>
+                </div>
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Penjualan Berdasarkan Wilayah</h3>
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Reports -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-[#00a8a8]">Detail Laporan Penjualan</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-[#00a8a8] text-white rounded-md hover:bg-[#00a8a8]/80">Ekspor ke Excel</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Print</button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Pesanan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggan</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SO-1001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Noventra Corporation</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-06-25</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp21.911.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Dikonfirmasi</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SO-1002</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DigiKarya Nusantara</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-06-05</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp23.450.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Dikonfirmasi</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SO-1003</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Bitspace property</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-05-21</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp18.900.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Faktur Telah Dikirim</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SO-1004</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Teranova Tech</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-05-17</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp20.030.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Selesai</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SO-1005</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Landbyte Corporation</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-05-15</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp27.823.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Selesai</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <div class="text-sm text-gray-500">Menampilkan 1 hingga 5 dari 5 entri</div>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 border rounded-md hover:bg-gray-50">&lt;</button>
+                        <button class="px-3 py-1 border rounded-md bg-[#00a8a8] text-white">1</button>
+                        <button class="px-3 py-1 border rounded-md hover:bg-gray-50">&gt;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Tab -->
+        <div id="inventory" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Summary Cards -->
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00a8a8]">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Total Nilai Inventory</p>
+                            <h3 class="text-2xl font-bold">Rp3.93M</h3>
+                            <p class="text-sm text-green-600">↑ 3% dari bulan lalu</p>
+                        </div>
+                        <div class="bg-[#00a8a8]/10 p-3 rounded-full">
+                            <i class="fas fa-boxes text-x1 text-[#00a8a8]"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Item Stok Rendah</p>
+                            <h3 class="text-2xl font-bold">24</h3>
+                            <p class="text-sm text-red-600">↓ 5% dari bulan lalu</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-exclamation-triangle text-x1 text-yellow-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Perputaran Inventory</p>
+                            <h3 class="text-2xl font-bold">1.8</h3>
+                            <p class="text-sm text-green-600">Dioptimalkan</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-sync text-x1 text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Pergerakan Inventory</h3>
+                    <canvas id="inventoryChart"></canvas>
+                </div>
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Tingkat Stok Berdasarkan Kategori</h3>
+                    <canvas id="stockChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Reports -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-[#00a8a8]">Laporan Status Inventory</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-[#00a8a8] text-white rounded-md hover:bg-[#00a8a8]/80">Ekspor ke Excel</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Print</button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SKU</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Produk</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Saat Ini</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level Pemesanan Ulang</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD-1001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Premium Widget</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">142</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">50</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Dalam Stok</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD-1002</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Smart Gadget</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">78</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">30</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Stok Rendah</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD-1003</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Eco-Friendly Product</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">200</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">100</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Dalam Stok</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD-1004</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tech Gadget</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">50</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Habis</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Procurement Tab -->
+        <div id="procurement" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Summary Cards -->
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00a8a8]">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Total Nilai PO</p>
+                            <h3 class="text-2xl font-bold">Rp1.39M</h3>
+                            <p class="text-sm text-green-600">↑ 15% dari bulan lalu</p>
+                        </div>
+                        <div class="bg-[#00a8a8]/10 p-3 rounded-full">
+                           <i class="fas fa-file-invoice text-x1 text-[#00a8a8]"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-red-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Persetujuan Tertunda</p>
+                            <h3 class="text-2xl font-bold">8</h3>
+                            <p class="text-sm text-gray-500">Perlu perhatian</p>
+                        </div>
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <i class="fas fa-exclamation-circle text-x1 text-red-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card bg-white p-6 rounded-lg shadow-md border-l-4 border-indigo-500">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Rata-rata Waktu Tunggu</p>
+                            <h3 class="text-2xl font-bold">7.2 hari</h3>
+                            <p class="text-sm text-green-600">Lebih cepat 2 hari</p>
+                        </div>
+                        <div class="bg-indigo-100 p-3 rounded-full">
+                            <i class="fas fa-clock text-x1 text-indigo-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Pengeluaran Procurement Bulanan</h3>
+                    <canvas id="procurementChart"></canvas>
+                </div>
+                <div class="chart-container p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-[#00a8a8]">Performa Supplier</h3>
+                    <canvas id="vendorChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Reports -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-[#00a8a8]">Laporan Transaksi Procurement</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-[#00a8a8] text-white rounded-md hover:bg-[#00a8a8]/80">Ekspor ke Excel</button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Print</button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor PO</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PO-10045</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Global Suppliers Inc.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-06-20</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp39.200.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Diterima</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PO-10046</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tech Supplies Co.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-06-15</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp25.000.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu Persetujuan</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PO-10047</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Eco Goods Ltd.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-06-01</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp15.000.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Diterima</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PO-10048</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Smart Tech Supplies</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-05-25</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp30.000.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PO-10049</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Green Supplies Co.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-05-15</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp20.000.000</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Diterima</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].classList.remove("text-[#00a8a8]", "border-[#00a8a8]");
+                tabbuttons[i].classList.add("text-gray-500");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("text-[#00a8a8]", "border-[#00a8a8]");
+            evt.currentTarget.classList.remove("text-gray-500");
+            
+            // Re-render charts when tab changes
+            setTimeout(renderAllCharts, 100);
+        }
+
+        // Initialize charts
+        function renderAllCharts() {
+            // Sales Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Sales Amount',
+                        data: [12000, 19000, 17000, 21000, 25000, 29000],
+                        backgroundColor: 'rgba(0, 168, 168, 0.2)',
+                        borderColor: '#00a8a8',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Region Chart
+            const regionCtx = document.getElementById('regionChart').getContext('2d');
+            new Chart(regionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Utara', 'Selatan', 'Timur', 'Barat', 'Pusat'],
+                    datasets: [{
+                        data: [25, 20, 30, 15, 10],
+                        backgroundColor: [
+                            '#00a8a8',
+                            '#3b82f6',
+                            '#8b5cf6',
+                            '#ec4899',
+                            '#f59e0b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+
+            // Inventory Chart
+            const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+            new Chart(inventoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [
+                        {
+                            label: 'Inventory Received',
+                            data: [1200, 1450, 1800, 2000, 1500, 1700],
+                            backgroundColor: 'rgba(0, 168, 168, 0.7)',
+                        },
+                        {
+                            label: 'Inventory Shipped',
+                            data: [800, 950, 1200, 1500, 1300, 1400],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Stock Chart
+            const stockCtx = document.getElementById('stockChart').getContext('2d');
+            new Chart(stockCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Electronics', 'Furniture', 'Office Supplies', 'Tools', 'Consumables'],
+                    datasets: [{
+                        label: 'Current Stock Levels',
+                        data: [65, 59, 90, 81, 56],
+                        backgroundColor: 'rgba(0, 168, 168, 0.2)',
+                        borderColor: '#00a8a8',
+                        pointBackgroundColor: '#00a8a8',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#00a8a8'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                }
+            });
+
+            // Procurement Chart
+            const procurementCtx = document.getElementById('procurementChart').getContext('2d');
+            new Chart(procurementCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Procurement Spend',
+                        data: [15000, 22000, 18000, 25000, 28000, 32000],
+                        backgroundColor: 'rgba(0, 168, 168, 0.2)',
+                        borderColor: '#00a8a8',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Vendor Chart
+            const vendorCtx = document.getElementById('vendorChart').getContext('2d');
+            new Chart(vendorCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Supplier A', 'Supplier B', 'Supplier C', 'Supplier D', 'Supplier E'],
+                    datasets: [{
+                        label: 'On-time Delivery %',
+                        data: [95, 85, 90, 80, 97],
+                        backgroundColor: [
+                            'rgba(0, 168, 168, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(236, 72, 153, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial render
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAllCharts();
+        });
+
+        const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+            salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+            procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+
+             const procurementSubmenuItems = document.querySelectorAll('#procurementSubmenu .sidebar-item');
+            procurementSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                procurementSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation(); // Prevent click from bubbling up to the parent
+                procurementSubmenu.classList.add('hidden'); // Close submenu after selection
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>

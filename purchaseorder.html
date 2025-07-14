@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order Management | Procurement</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f9fafb;
+        color: #1f2937;
+        }
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.3);
+            border-left: 4px solid #00A8A8;
+            color: #fff !important;
+        }
+        .content-area {
+            transition: all 0.3s;
+        }
+        @media (min-width: 768px) {
+            .sidebar-collapsed .sidebar {
+                width: 80px;
+            }
+            .sidebar-collapsed .sidebar .menu-text {
+                display: none;
+            }
+            .sidebar-collapsed .content-area {
+                margin-left: 80px;
+            }
+        }
+        .status-draft {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        .status-sent {
+            background-color: #e6f7ff;
+            color: #1890ff;
+        }
+        .status-confirmed {
+            background-color: #fff7e6;
+            color: #faad14;
+        }
+        .status-received {
+            background-color: #f6ffed;
+            color: #52c41a;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <div class="content-area flex-1 overflow-auto flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 py-3 px-6 flex items-center justify-between">
+            <h2 class="text-lg font-semibold text-gray-800">Pesanan Pembelian</h2>
+            <div class="ml-4 flex space-x-2">
+                <div class="relative">
+                    <input type="text" placeholder="Cari PO..." class="border rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <button class="p-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition" id="newPoBtn">
+                    <i class="fas fa-plus"></i>
+                    <span class="hidden md:inline ml-1">PO Baru</span>
+                </button>
+            </div>
+        </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-4 bg-white">
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition flex items-center">
+                            <i class="fas fa-magic mr-2"></i>
+                            Buat dari PR
+                        </button>
+                        <button class="px-4 py-2 bg-[#ffa5a5] text-white rounded-lg hover:bg-[#ffa5a5] transition flex items-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            Buat Manual
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <label for="status-filter" class="mr-2 text-gray-600">Status:</label>
+                            <select id="status-filter" class="border rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="all">Semua Status</option>
+                                <option value="draft">Draft</option>
+                                <option value="sent">Terkirim</option>
+                                <option value="confirmed">Dikonfirmasi</option>
+                                <option value="received">Diterima</option>
+                            </select>
+                        </div>
+                        <button class="p-2 border rounded-lg hover:bg-gray-100">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                        <button class="p-2 border rounded-lg hover:bg-gray-100">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PO List Table -->
+                <div class="bg-white rounded-lg border overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nomor PO
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Supplier
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tanggal
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Pengiriman Terjadwal
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Jumlah
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Aksi
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-teal-600">PO-2025-0056</div>
+                                        <div class="text-sm text-gray-500">PR-2025-012</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f08ce0b9-ea1a-4087-9cd4-4bb82bbc469a.png" alt="Supplier logo - Teknik Jaya with blue colors and gear icon" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <div>
+                                                <div class="text-sm font-medium">PT Teknik Jaya</div>
+                                                <div class="text-sm text-gray-500">teknikjaya@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        15 Aug 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">20 Aug 2025</div>
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <span class="status-dot bg-green-500 w-2 h-2 rounded-full mr-1"></span>
+                                            Sesuai Jadwal
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Rp 12,500,000
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full status-confirmed">Dikonfirmasi</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-teal-600">PO-2025-0055</div>
+                                        <div class="text-sm text-gray-500">PR-2025-011</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fedb5198-e71e-459a-bf9c-9555782aed49.png" alt="Supplier logo - Elektronik Nusantara with red colors" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <div>
+                                                <div class="text-sm font-medium">Elektronik Nusantara</div>
+                                                <div class="text-sm text-gray-500">elektronik@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        14 Aug 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">18 Aug 2025</div>
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <span class="status-dot bg-yellow-500 w-2 h-2 rounded-full mr-1"></span>
+                                            Terlambat
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Rp 8,250,000
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full status-received">Diterima</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-teal-600">PO-2025-0054</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/cd6f95a4-3c4d-433b-a7d8-991187f1d6c0.png" alt="Supplier logo - Furnitur Modern with brown color scheme" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <div>
+                                                <div class="text-sm font-medium">Furnitur Modern</div>
+                                                <div class="text-sm text-gray-500">office@furniturmodern.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        12 Aug 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">25 Aug 2025</div>
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <span class="status-dot bg-green-500 w-2 h-2 rounded-full mr-1"></span>
+                                            Sesuai Jadwal
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Rp 23,750,000
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full status-sent">Dikirim</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-print"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-ellipsis-h"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-teal-600">PO-2025-0053</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5a3679c5-228e-4980-a63e-c344938c772b.png" alt="Supplier logo - Bahan Bangunan Sejahtera with grey color palette" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <div>
+                                                <div class="text-sm font-medium">Bahan Bangunan Sejahtera</div>
+                                                <div class="text-sm text-gray-500">bahanbangunan@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        10 Aug 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-gray-900">30 Aug 2025</div>
+                                        <div class="text-xs text-gray-500 flex items-center">
+                                            <span class="status-dot bg-blue-500 w-2 h-2 rounded-full mr-1"></span>
+                                            Dijadwalkan
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Rp 45,000,000
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs rounded-full status-draft">Draft</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <div class="flex justify-end space-x-2">
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-gray-600">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6">
+                    <div class="text-sm text-gray-500">
+                        Menampilkan <span class="font-medium">1</span> dari <span class="font-medium">1</span> Pesanan Pembelian
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-1 border rounded-lg bg-teal-600 text-white">1</button>
+                        <button class="px-3 py-1 border rounded-lg hover:bg-gray-100 disabled:opacity-50" disabled>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- PO Creation Modal -->
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden" id="po-modal">
+                    <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl">
+                        <div class="flex justify-between items-center border-b p-4">
+                            <h3 class="text-lg font-semibold">Buat PO Baru</h3>
+                            <button class="text-gray-400 hover:text-gray-600" id="close-modal">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="col-span-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+                                    <select class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                        <option value="">Pilih Supplier</option>
+                                        <option value="1">PT Teknik Jaya</option>
+                                        <option value="2">Elektronik Nusantara</option>
+                                        <option value="3">Furnitur Modern</option>
+                                        <option value="4">Bahan Bangunan Sejahtera</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Purchase Request</label>
+                                    <select class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                        <option value="">Pilih PR (optional)</option>
+                                        <option value="1">PR-2025-015</option>
+                                        <option value="2">PR-2025-014</option>
+                                        <option value="3">PR-2025-013</option>
+                                    </select>
+                                </div>
+                                <div class="col-span-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Pesan</label>
+                                    <input type="date" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                </div>
+                                <div class="col-span-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Pengiriman Terjadwal</label>
+                                    <input type="date" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                </div>
+                            </div>
+
+                            <!-- Order Lines -->
+                            <div class="mt-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Garis Pesanan</label>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Satuan</th>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taxes</th>
+                                                <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subtotal</th>
+                                                <th scope="col" class="px-3 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-200">
+                                            <tr>
+                                                <td class="px-3 py-2 whitespace-nowrap">
+                                                    <select class="w-full border rounded px-2 py-1 text-sm">
+                                                        <option value="">Pilih Produk</option>
+                                                        <option value="1">LCD Panel 15"</option>
+                                                        <option value="2">Office Chair</option>
+                                                        <option value="3">Semen Konstruksi</option>
+                                                    </select>
+                                                </td>
+                                                <td class="px-3 py-2">
+                                                    <input type="text" class="w-full border rounded px-2 py-1 text-sm" placeholder="Description">
+                                                </td>
+                                                <td class="px-3 py-2 whitespace-nowrap">
+                                                    <input type="number" class="w-full border rounded px-2 py-1 text-sm" value="1" min="1">
+                                                </td>
+                                                <td class="px-3 py-2 whitespace-nowrap">
+                                                    <input type="text" class="w-full border rounded px-2 py-1 text-sm" placeholder="0">
+                                                </td>
+                                                <td class="px-3 py-2 whitespace-nowrap">
+                                                    <select class="w-full border rounded px-2 py-1 text-sm">
+                                                        <option value="0">No Tax</option>
+                                                        <option value="10">PPN 10%</option>
+                                                        <option value="11">PPN 11%</option>
+                                                    </select>
+                                                </td>
+                                                <td class="px-3 py-2 whitespace-nowrap text-sm">
+                                                    Rp 0
+                                                </td>
+                                                <td class="px-3 py-2 whitespace-nowrap text-right">
+                                                    <button class="text-red-500 hover:text-red-700">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button class="mt-2 text-teal-600 hover:text-teal-800 text-sm flex items-center">
+                                    <i class="fas fa-plus-circle mr-1"></i> Tambahkan Baris
+                                </button>
+                            </div>
+
+                            <!-- Totals -->
+                            <div class="mt-4 flex justify-end">
+                                <div class="w-64">
+                                    <div class="flex justify-between py-1">
+                                        <span class="text-gray-600">Subtotal:</span>
+                                        <span>Rp 0</span>
+                                    </div>
+                                    <div class="flex justify-between py-1">
+                                        <span class="text-gray-600">Taxes:</span>
+                                        <span>Rp 0</span>
+                                    </div>
+                                    <div class="flex justify-between py-1 border-t border-gray-200 font-semibold">
+                                        <span>Total:</span>
+                                        <span>Rp 0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 flex justify-end border-t rounded-b-lg">
+                            <button class="px-4 py-2 border rounded-lg mr-2 hover:bg-gray-100">Batal</button>
+                            <button class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">Konfirmasi Pesanan</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle sidebar
+            const toggleBtn = document.querySelector('.toggle-sidebar');
+            const sidebarCollapsed = document.querySelector('.sidebar-collapsed');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    sidebarCollapsed.classList.toggle('sidebar-collapsed');
+                });
+            }
+
+            // New PO button
+            const newPoBtn = document.querySelector('button.bg-teal-600');
+            const poModal = document.getElementById('po-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            if (newPoBtn) {
+                newPoBtn.addEventListener('click', function() {
+                    poModal.classList.remove('hidden');
+                });
+            }
+            
+            if (closeModal) {
+                closeModal.addEventListener('click', function() {
+                    poModal.classList.add('hidden');
+                });
+            }
+
+            // Click on PO row
+            const poRows = document.querySelectorAll('tbody tr');
+            poRows.forEach(row => {
+                row.addEventListener('click', function(e) {
+                    // Check if we clicked on an action button
+                    if (!e.target.closest('button') && !e.target.closest('i.fas')) {
+                        window.location.href = 'po-detail.html';
+                    }
+                });
+            });
+
+            // Status filter
+            const statusFilter = document.getElementById('status-filter');
+            if (statusFilter) {
+                statusFilter.addEventListener('change', function() {
+                    console.log(`Filter changed to: ${this.value}`);
+                    // Implement actual filtering logic here
+                });
+            }
+        });
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+            salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+            procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+
+             const procurementSubmenuItems = document.querySelectorAll('#procurementSubmenu .sidebar-item');
+            procurementSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                procurementSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation(); // Prevent click from bubbling up to the parent
+                procurementSubmenu.classList.add('hidden'); // Close submenu after selection
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+</script>
+</body>
+</html>

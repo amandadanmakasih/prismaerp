@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+            color: #F4F7FA !important;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .kanban-card {
+            transition: all 0.3s ease;
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn.active {
+            background-color: #00a8a8 !important;
+            color: #fff !important;
+            border-color: #00a8a8 !important;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-gray-50">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+            <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+            <h1 class="text-xl font-bold text-white">PRISMA</h1>
+        </div>
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 overflow-hidden flex flex-col">
+        <!-- Header -->
+        <header class="bg-white border-b px-6 py-4">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800">Invoices</h1>
+                <div class="flex space-x-3">
+                    <button type="button" class="flex items-center px-4 py-2 bg-[#00a8a8] rounded-md text-white hover:bg-teal-700" onclick="location.href='create_invoice.html'">
+                        <i class="fas fa-plus w-5 h-5 mr-2"></i>
+                        Create
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="h-full overflow-auto p-6">
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="text-gray-500 text-sm font-medium">Jatuh Tempo</h3>
+                    <p class="text-2xl font-bold text-gray-800">Rp12.450.000</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-green-500 text-sm font-medium">12 invoices</span>
+                        <span class="text-gray-400 text-sm">15% dari jumlah</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="text-gray-500 text-sm font-medium">Terlambat</h3>
+                    <p class="text-2xl font-bold text-gray-800">Rp8.320.000</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-red-500 text-sm font-medium">8 invoices</span>
+                        <span class="text-gray-400 text-sm">10% dari jumlah</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="text-gray-500 text-sm font-medium">Dibayar</h3>
+                    <p class="text-2xl font-bold text-gray-800">Rp56.780.000</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-blue-500 text-sm font-medium">45 invoices</span>
+                        <span class="text-gray-400 text-sm">65% dari jumlah</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="text-gray-500 text-sm font-medium">Total</h3>
+                    <p class="text-2xl font-bold text-gray-800">Rp77.550.000</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-purple-500 text-sm font-medium">65 invoices</span>
+                        <span class="text-gray-400 text-sm">100% dari jumlah</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice List -->
+            <div id="statusFilter" class="flex flex-wrap gap-2 mb-4">
+                <button data-status="Semua Invoice" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition active">Semua Invoice</button>
+                <button data-status="Terbuka" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Terbuka</button>
+                <button data-status="Dibayar" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Dibayar</button>
+                <button data-status="Dibatalkan" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Dibatalkan</button>
+                <button data-status="Draft" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Draft</button>
+                <button data-status="Belum dikirimkan" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Belum dikirimkan</button>
+                <button data-status="Terkirim" class="filter-btn px-3 py-1 rounded-full text-sm font-medium bg-white border border-[#00a8a8] text-[#00a8a8] hover:bg-[#00a8a8] hover:text-white transition">Terkirim</button>
+                </div>
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <!-- List Header -->
+                <div class="grid grid-cols-12 gap-4 p-4 border-b font-medium text-gray-500 text-sm">
+                    <div class="col-span-3">Nomor Invoice</div>
+                    <div class="col-span-2">Customer</div>
+                    <div class="col-span-1">Tanggal</div>
+                    <div class="col-span-1">Tenggat Waktu</div>
+                    <div class="col-span-1 text-right">Jumlah</div>
+                    <div class="col-span-2">Status</div>
+                    <div class="col-span-2 text-right">Action</div>
+                </div>
+
+                <!-- Invoice Items -->
+                <div id="invoice-list" class="divide-y divide-gray-200">
+                    <!-- Invoice Item 1 -->
+                    <div class="invoice-card grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent">
+                        <div class="col-span-3 font-medium text-teal-700">INV-2025-0012</div>
+                        <div class="col-span-2 text-gray-700">Acme Corporation</div>
+                        <div class="col-span-1 text-gray-500">2025-05-15</div>
+                        <div class="col-span-1 text-gray-500">2025-06-14</div>
+                        <div class="col-span-1 text-right font-medium text-gray-800">Rp1.250.000</div>
+                        <div class="col-span-2">
+                            <span class="status-open px-2 py-1 rounded-full text-xs font-medium text-[#4caf50] bg-[#e8f5e9]">Terbuka</span>
+                        </div>
+                        <div class="col-span-2 flex justify-end space-x-2">
+                            <button class="p-1 text-teal-700 hover:text-teal-700">
+                                <i class="fas fa-eye w-5 h-5"></i>
+                            </button>
+                            <button class="p-1 text-green-500 hover:text-green-700">
+                                <i class="fas fa-check w-5 h-5"></i>
+                            </button>
+                            <button class="p-1 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-trash w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Invoice Item 2 -->
+                    <div class="invoice-card grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent">
+                        <div class="col-span-3 font-medium text-teal-700">INV-2025-0011</div>
+                        <div class="col-span-2 text-gray-700">Beta Solutions</div>
+                        <div class="col-span-1 text-gray-500">2025-05-10</div>
+                        <div class="col-span-1 text-gray-500">2025-06-09</div>
+                        <div class="col-span-1 text-right font-medium text-gray-800">Rp3.420.000</div>
+                        <div class="col-span-2">
+                            <span class="status-paid px-2 py-1 rounded-full text-xs font-medium text-[#2196f3] bg-[#e3f2fd]">Dibayar</span>
+                        </div>
+                        <div class="col-span-2 flex justify-end space-x-2">
+                            <button class="p-1 text-teal-700 hover:text-teal-700">
+                                <i class="fas fa-eye w-5 h-5"></i>
+                            </button>
+                            <button class="p-1 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-trash w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Invoice Item 3 -->
+                    <div class="invoice-card grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent">
+                        <div class="col-span-3 font-medium text-teal-700">INV-2025-0010</div>
+                        <div class="col-span-2 text-gray-700">Gamma Industries</div>
+                        <div class="col-span-1 text-gray-500">2025-05-05</div>
+                        <div class="col-span-1 text-gray-500">2025-06-04</div>
+                        <div class="col-span-1 text-right font-medium text-gray-800">Rp890.000</div>
+                        <div class="col-span-2">
+                            <span class="status-cancelled px-2 py-1 rounded-full text-xs font-medium text-[#f44336] bg-[#ffebee]">Dibatalkan</span>
+                        </div>
+                        <div class="col-span-2 flex justify-end space-x-2">
+                            <button class="p-1 text-teal-700 hover:text-teal-700">
+                                <i class="fas fa-eye w-5 h-5"></i>
+                            </button>
+                            <button class="p-1 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-trash w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Invoice Item 4 -->
+                    <div class="invoice-card grid grid-cols-12 gap-4 p-4 hover:bg-gray-50 cursor-pointer border-l-4 border-transparent">
+                        <div class="col-span-3 font-medium text-teal-700">INV-2025-0009</div>
+                        <div class="col-span-2 text-gray-700">Delta Services</div>
+                        <div class="col-span-1 text-gray-500">2025-04-28</div>
+                        <div class="col-span-1 text-gray-500">2025-05-28</div>
+                        <div class="col-span-1 text-right font-medium text-gray-800">Rp6.540.000</div>
+                        <div class="col-span-2">
+                            <span class="status-draft px-2 py-1 rounded-full text-xs font-medium text-[#777777] bg-[#f0f0f0]">Draft</span>
+                        </div>
+                        <div class="col-span-2 flex justify-end space-x-2">
+                            <button class="p-1 text-teal-700 hover:text-teal-700">
+                                <i class="fas fa-eye w-5 h-5"></i>
+                            </button>
+                            <button class="p-1 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-trash w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-between items-center mt-6 px-4">
+                <div class="text-sm text-gray-500">
+                    Menampilkan <span class="font-medium">1</span> dari <span class="font-medium">1</span> hasil
+                </div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 border rounded-md text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        Sebelumnya
+                    </button>
+                    <button class="px-3 py-1 border rounded-md bg-[#00a8a8] text-white hover:bg-teal-700">
+                        1
+                    </button>
+                    <button class="px-3 py-1 border rounded-md text-gray-500 hover:bg-gray-50">
+                        Selanjutnya
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Sidebar Sales submenu toggle
+        const salesMenuBtn = document.getElementById('salesMenuBtn');
+        const salesSubmenu = document.getElementById('salesSubmenu');
+        const salesMenuIcon = document.getElementById('salesMenuIcon');
+        if (salesMenuBtn && salesSubmenu && salesMenuIcon) {
+            salesMenuBtn.addEventListener('click', function() {
+                salesSubmenu.classList.toggle('hidden');
+                salesMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+
+        // Efek pilih pada submodul Sales
+        const salesSubmenuItems = document.querySelectorAll('#salesSubmenu .sidebar-item');
+        salesSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                salesSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation();
+            });
+        });
+    });
+    </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  // ...sidebar script...
+
+  // Filter status invoice
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const invoiceCards = document.querySelectorAll('.invoice-card');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Aktifkan tombol yang diklik
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const status = this.getAttribute('data-status').toLowerCase();
+
+      // Filter invoice list
+      invoiceCards.forEach(card => {
+        const statusText = card.querySelector('span[class^="status-"]').textContent.trim().toLowerCase();
+        if (status === statusText || status === 'semua invoice') {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+  const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleInventoryMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+</script>
+</body>
+</html>

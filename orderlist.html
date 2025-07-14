@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Orderlist - PRISMA ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+            color: #F4F7FA !important;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .kanban-card {
+            transition: all 0.3s ease;
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+   <header class="bg-white border-b border-gray-200 py-3 px-6 flex items-center justify-between">
+      <h2 class="text-2xl font-semibold">Daftar Pesanan</h2>
+      <div class="flex gap-3 items-center">
+        <button type="button" class="bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium px-4 py-2 rounded flex items-center gap-2" onclick="location.href='neworder.html'">
+          <i class="fas fa-plus text-base"></i>
+          Pesanan Baru  
+        </button>
+        <button type="button" title="Refresh" aria-label="Refresh order list" class="p-2 rounded hover:bg-gray-200">
+          <i class="fas fa-sync-alt w-6 h-6 text-gray-600 hover:text-teal-600 text-lg"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="bg-white rounded-lg shadow-sm border border-gray-100">
+      <table class="min-w-full border-collapse table-auto text-sm text-left">
+        <thead class="bg-gray-50 text-gray-600 text-xs uppercase select-none">
+          <tr>
+            <th class="py-3 px-4 font-semibold">Nomor Pesanan</th>
+            <th class="py-3 px-4 font-semibold">Tanggal</th>
+            <th class="py-3 px-4 font-semibold">Pelanggan</th>
+            <th class="py-3 px-4 font-semibold">Status</th>
+            <th class="py-3 px-4 font-semibold">Total</th>
+            <th class="py-3 px-4 font-semibold text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+            <td class="py-3 px-4 text-teal-700 font-medium hover:underline">SO-2025-001</td>
+            <td class="py-3 px-4 whitespace-nowrap">15 Jun 2025</td>
+            <td class="py-3 px-4">PT. Maju Jaya</td>
+            <td class="py-3 px-4">
+              <span class="inline-block bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-semibold select-none">Selesai</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">Rp3.250.000</td>
+            <td class="py-3 px-4 flex justify-center items-center space-x-3">
+              <button aria-label="View SO-2023-001" class="text-teal-700 hover:text-teal-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <button aria-label="More actions for SO-2023-001" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="3" r="2"></circle>
+                  <circle cx="10" cy="10" r="2"></circle>
+                  <circle cx="10" cy="17" r="2"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <tr class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+            <td class="py-3 px-4 text-teal-700 font-medium hover:underline">SO-2025-002</td>
+            <td class="py-3 px-4 whitespace-nowrap">14 Jun 2025</td>
+            <td class="py-3 px-4">CV. Abadi Sentosa</td>
+            <td class="py-3 px-4">
+              <span class="inline-block bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-xs font-semibold select-none">Proses</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">Rp5.750.000</td>
+            <td class="py-3 px-4 flex justify-center items-center space-x-3">
+              <button aria-label="View SO-2023-002" class="text-teal-700 hover:text-teal-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <button aria-label="More actions for SO-2023-002" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="3" r="2"></circle>
+                  <circle cx="10" cy="10" r="2"></circle>
+                  <circle cx="10" cy="17" r="2"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <tr class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+            <td class="py-3 px-4 text-teal-700 font-medium hover:underline">SO-2025-003</td>
+            <td class="py-3 px-4 whitespace-nowrap">12 Jun 2025</td>
+            <td class="py-3 px-4">Toko Sumber Rejeki</td>
+            <td class="py-3 px-4">
+              <span class="inline-block bg-yellow-100 text-yellow-700 rounded-full px-3 py-1 text-xs font-semibold select-none">Menunggu</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">Rp1.120.000</td>
+            <td class="py-3 px-4 flex justify-center items-center space-x-3">
+              <button aria-label="View SO-2023-003" class="text-teal-700 hover:text-teal-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <button aria-label="More actions for SO-2023-003" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="3" r="2"></circle>
+                  <circle cx="10" cy="10" r="2"></circle>
+                  <circle cx="10" cy="17" r="2"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <tr class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+            <td class="py-3 px-4 text-teal-700 font-medium hover:underline">SO-2025-004</td>
+            <td class="py-3 px-4 whitespace-nowrap">10 Jun 2025</td>
+            <td class="py-3 px-4">UD. Makmur Jaya</td>
+            <td class="py-3 px-4">
+              <span class="inline-block bg-green-100 text-green-700 rounded-full px-3 py-1 text-xs font-semibold select-none">Selesai</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">Rp8.340.000</td>
+            <td class="py-3 px-4 flex justify-center items-center space-x-3">
+              <button aria-label="View SO-2023-004" class="text-teal-700 hover:text-teal-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <button aria-label="More actions for SO-2023-004" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="3" r="2"></circle>
+                  <circle cx="10" cy="10" r="2"></circle>
+                  <circle cx="10" cy="17" r="2"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <tr class="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors">
+            <td class="py-3 px-4 text-teal-700 font-medium hover:underline">SO-2025-005</td>
+            <td class="py-3 px-4 whitespace-nowrap">8 Jun 2025</td>
+            <td class="py-3 px-4">PT. Global Teknologi</td>
+            <td class="py-3 px-4">
+              <span class="inline-block bg-red-100 text-red-700 rounded-full px-3 py-1 text-xs font-semibold select-none">Batal</span>
+            </td>
+            <td class="py-3 px-4 whitespace-nowrap">Rp12.500.000</td>
+            <td class="py-3 px-4 flex justify-center items-center space-x-3">
+              <button aria-label="View SO-2023-005" class="text-teal-700 hover:text-teal-900">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+              </button>
+              <button aria-label="More actions for SO-2023-005" class="text-gray-500 hover:text-gray-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <circle cx="10" cy="3" r="2"></circle>
+                  <circle cx="10" cy="10" r="2"></circle>
+                  <circle cx="10" cy="17" r="2"></circle>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        const salesSubmenuItems = document.querySelectorAll('#salesSubmenu .sidebar-item');
+        salesSubmenuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            salesSubmenuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+            e.stopPropagation(); 
+          })
+        });
+      
+            salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+        });
+
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleInventoryMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+</script>
+</body>
+</html>

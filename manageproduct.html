@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Produk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background-color: #F4F7FA; }
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-gray-50">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+            <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+            <h1 class="text-xl font-bold text-white">PRISMA</h1>
+        </div>
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="bg-white border-b border-gray-200 py-4 px-8 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                Manajemen Produk
+            </h2>
+        </header>
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <!-- Form Tambah/Ubah Produk -->
+            <div class="bg-white rounded shadow p-6 mb-8 w-full">
+                <form class="grid grid-cols-1 md:grid-cols-2 gap-6" autocomplete="off">
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="sku">SKU / Kode Unik</label>
+                        <input type="text" id="sku" name="sku" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Contoh: PRD-001" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="name">Nama Produk</label>
+                        <input type="text" id="name" name="name" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Nama produk" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="category">Kategori</label>
+                        <select id="category" name="category" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                            <option value="">Pilih kategori</option>
+                            <option value="elektronik">Elektronik</option>
+                            <option value="aksesoris">Aksesoris</option>
+                            <option value="peralatan">Peralatan</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="unit">Satuan</label>
+                        <select id="unit" name="unit" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                            <option value="">Pilih satuan</option>
+                            <option value="unit">Unit</option>
+                            <option value="pcs">Pcs</option>
+                            <option value="set">Set</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-1" for="desc">Deskripsi Produk</label>
+                        <textarea id="desc" name="desc" rows="3" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Deskripsi produk"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="image">Gambar Produk</label>
+                        <input type="file" id="image" name="image" accept="image/*" class="w-full text-sm">
+                    </div>
+                    <div class="md:col-span-2 flex justify-end items-end gap-2">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                            <i class="fas fa-plus"></i> Tambah Produk
+                        </button>
+                        <button type="reset" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                            <i class="fas fa-undo"></i> Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <!-- Kelola Kategori & Satuan -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-sm flex items-center gap-1 transition active:scale-95">
+                    <i class="fas fa-layer-group"></i> Kelola Kategori
+                </button>
+                <button class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-sm flex items-center gap-1 transition active:scale-95">
+                    <i class="fas fa-ruler"></i> Kelola Satuan
+                </button>
+            </div>
+            <!-- Tabel Data Produk -->
+            <div class="bg-white rounded shadow p-6">
+                <h2 class="text-lg font-semibold text-slate-900 mb-4">Daftar Produk</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-900">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-3 border-b border-slate-200">Gambar</th>
+                                <th class="p-3 border-b border-slate-200">SKU</th>
+                                <th class="p-3 border-b border-slate-200">Nama</th>
+                                <th class="p-3 border-b border-slate-200 text-center">Kategori</th>
+                                <th class="p-3 border-b border-slate-200 text-center">Satuan</th>
+                                <th class="p-3 border-b border-slate-200">Deskripsi</th>
+                                <th class="p-3 border-b border-slate-200 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Contoh data produk -->
+                            <tr>
+                                <td class="p-3 border-b border-slate-200">
+                                    <img src="https://dummyimage.com/60x60/00a8a8/fff&text=IMG" alt="Produk" class="w-12 h-12 object-cover rounded">
+                                </td>
+                                <td class="p-3 border-b border-slate-200">PRD-001</td>
+                                <td class="p-3 border-b border-slate-200">Produk A</td>
+                                <td class="p-3 border-b border-slate-200 text-center">Elektronik</td>
+                                <td class="p-3 border-b border-slate-200 text-center">Unit</td>
+                                <td class="p-3 border-b border-slate-200">Produk elektronik terbaru</td>
+                                <td class="p-3 border-b border-slate-200 text-center">
+                                    <button class="text-yellow-500 hover:text-yellow-700 mx-1 transition active:scale-95" title="Ubah"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-600 hover:text-red-800 mx-1 transition active:scale-95" title="Hapus"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <!-- Tambahkan baris produk lain di sini -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+    // Sidebar Inventory submenu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+        const inventorySubmenu = document.getElementById('inventorySubmenu');
+        const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+        if (inventoryMenuBtn && inventorySubmenu && inventoryMenuIcon) {
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+        const inventorySubmenuItems = document.querySelectorAll('#inventorySubmenu .sidebar-item');
+        inventorySubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                inventorySubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation(); // Prevent click from bubbling up to the parent
+                inventorySubmenu.classList.add('hidden'); // Close submenu after selection
+            });
+        });
+    });
+    // Sales submenu (agar bisa toggle juga)
+        const salesMenuBtn = document.getElementById('salesMenuBtn');
+        const salesSubmenu = document.getElementById('salesSubmenu');
+        const salesMenuIcon = document.getElementById('salesMenuIcon');
+        if (salesMenuBtn && salesSubmenu && salesMenuIcon) {
+            salesMenuBtn.addEventListener('click', function() {
+                salesSubmenu.classList.toggle('hidden');
+                salesMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+        const salesSubmenuItems = document.querySelectorAll('#salesSubmenu .sidebar-item');
+        salesSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                salesSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation();
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>

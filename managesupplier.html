@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplier Management | Procurement ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00a8a8',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .kanban-card {
+            transition: all 0.3s ease;
+        }
+        
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .active-tab {
+            border-bottom: 3px solid #00a8a8;
+        }
+        .contact-badge {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .hover-effect:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 py-3 px-4 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-800">Manajemen Supplier</h3>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-primary hover:bg-opacity-90 text-white rounded-lg flex items-center">
+                        <i class="fas fa-plus mr-2"></i>
+                        Tambah Supplier Baru
+                    </button>
+                    <div class="relative">
+                        <input type="text" placeholder="Cari supplier..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-6">
+                <!-- Supplier Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-sm hover-effect p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-500">Supplier Aktif</h3>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">147</p>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full">
+                                <i class="fas fa-users text-primary text-x1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm hover-effect p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-500">Rata-rata Waktu Tunggu</h3>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">14.5 Hari</p>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full">
+                                <i class="fas fa-clock text-primary text-x1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-sm hover-effect p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-500">PO Bulan Ini</h3>
+                                <p class="text-2xl font-bold text-gray-800 mt-1">48</p>
+                            </div>
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full">
+                                <i class="fas fa-file-invoice text-primary text-x1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplier List -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px">
+                            <a href="#" class="py-4 px-6 text-center text-sm font-medium text-gray-900 border-b-2 border-primary active-tab">
+                                Supplier Aktif
+                            </a>
+                            <a href="#" class="py-4 px-6 text-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                                Persetujuan Tertunda
+                            </a>
+                            <a href="#" class="py-4 px-6 text-center text-sm font-medium text-gray-500 hover:text-gray-700">
+                                Masuk Daftar Hitam
+                            </a>
+                        </nav>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Nama Supplier
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Kontak
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Produk
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Waktu Tunggu
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Tanggal PO Terakhir
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Aksi
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center">
+                                               <i class="fas fa-building text-primary h-5 w-5"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">PT Mandiri Sejahtera</div>
+                                                <div class="text-sm text-gray-500">Supplier ID: SP-2025-0456</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="contact-badge bg-green-100 text-green-600">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <span class="text-sm text-gray-900">Budi Santoso</span>
+                                        </div>
+                                        <div class="text-sm text-gray-500 mt-1">budi.s@mandiri.com</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Komponen Elektronik
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        12 hari
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        15 Jun 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary-dark mr-3">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Edit</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center">
+                                                <i class="fas fa-building text-primary h-5 w-5"></i>
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">CV Bahan Bangunan Jaya</div>
+                                                <div class="text-sm text-gray-500">Supplier ID: SP-2025-0789</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="contact-badge bg-blue-100 text-blue-600">
+                                                <i class="fas fa-envelope"></i>
+                                            </span>
+                                            <span class="text-sm text-gray-900">Dewi Indah</span>
+                                        </div>
+                                        <div class="text-sm text-gray-500 mt-1">dewi.indah@bbjaya.co.id</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            Bahan Bangunan
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        21 hari
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2 Jul 2025
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-primary hover:text-primary-dark mr-3">View</button>
+                                        <button class="text-gray-600 hover:text-gray-900">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Sebelumnya
+                            </a>
+                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Selanjutnya
+                            </a>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Menampilkan <span class="font-medium">1</span> dari <span class="font-medium">1</span> hasil
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Sebelumnya</span>
+                                        <i class="fas fa-chevron-left h-5 w-5" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="#" aria-current="page" class="z-10 bg-primary border-primary text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                        1
+                                    </a>
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Selanjutnya</span>
+                                        <i class="fas fa-chevron-right h-5 w-5" aria-hidden="true"></i>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplier Detail Modal (Hidden by default) -->
+                <div id="supplierDetailModal" class="fixed inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div class="sm:flex sm:items-start">
+                                    <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary bg-opacity-10 sm:mx-0 sm:h-10 sm:w-10">
+                                        <i class="fas fa-user-tie text-primary h-6 w-6"></i>
+                                    </div>
+                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                        <div class="flex justify-between items-center">
+                                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                Detail Supplier
+                                            </h3>
+                                            <button type="button" class="text-gray-400 hover:text-gray-500">
+                                                <i class="fas fa-times h-6 w-6" aria-hidden="true" onclick="document.getElementById('supplierDetailModal').classList.add('hidden');"></i>
+                                            </button>
+                                        </div>
+                                        <div class="mt-2">
+                                            <!-- Supplier Info Tabs -->
+                                            <div class="border-b border-gray-200">
+                                                <nav class="-mb-px flex space-x-8">
+                                                    <a href="#" class="border-primary text-primary whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                                        Overview
+                                                    </a>
+                                                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                                        Purchase History
+                                                    </a>
+                                                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                                        Documents
+                                                    </a>
+                                                    <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                                        Performance
+                                                    </a>
+                                                </nav>
+                                            </div>
+
+                                            <!-- Supplier Detail Content -->
+                                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                                                <!-- Left Column -->
+                                                <div class="col-span-2 space-y-6">
+                                                    <!-- Basic Info -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Informasi Umum</h4>
+                                                        <div class="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Nama Supplier</p>
+                                                                <p class="text-sm font-medium text-gray-900">PT Mandiri Sejahtera</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">ID Supplier</p>
+                                                                <p class="text-sm font-medium text-gray-900">SP-2023-0456</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">ID Tax</p>
+                                                                <p class="text-sm font-medium text-gray-900">01.234.567.8-912.345</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Supplier Sejak</p>
+                                                                <p class="text-sm font-medium text-gray-900">15 Jan 2020</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Contact Info -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Informasi Kontak</h4>
+                                                        <div class="grid grid-cols-2 gap-4">
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Kontak Utama</p>
+                                                                <p class="text-sm font-medium text-gray-900">Budi Santoso</p>
+                                                                <div class="flex items-center mt-1 text-sm text-gray-500">
+                                                                    <i class="fas fa-phone-alt h-4 w-4 mr-1"></i>
+                                                                    +62 812-3456-7890
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Kontak Kedua</p>
+                                                                <p class="text-sm font-medium text-gray-900">Ani Rahmawati</p>
+                                                                <div class="flex items-center mt-1 text-sm text-gray-500">
+                                                                    <i class="fas fa-phone-alt h-4 w-4 mr-1"></i>
+                                                                    sales@mandiri.com
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Alamat</p>
+                                                                <p class="text-sm text-gray-900">Jl. Gatot Subroto No. 123, Jakarta Selatan, Indonesia</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Supplier Performance -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Metrik Kinerja</h4>
+                                                        <div class="grid grid-cols-3 gap-4">
+                                                            <div class="text-center">
+                                                                <p class="text-xs text-gray-500">Rata-rata Waktu Tunggu</p>
+                                                                <p class="text-lg font-bold text-gray-900">12 hari</p>
+                                                            </div>
+                                                            <div class="text-center">
+                                                                <p class="text-xs text-gray-500">Tingkat Tepat Waktu</p>
+                                                                <p class="text-lg font-bold text-green-600">94.5%</p>
+                                                            </div>
+                                                            <div class="text-center">
+                                                                <p class="text-xs text-gray-500">Peringkat Kualitas</p>
+                                                                <p class="text-lg font-bold text-green-600">4.8/5</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right Column -->
+                                                <div class="space-y-6">
+                                                    <!-- Payment Info -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Informasi Pembayaran</h4>
+                                                        <div class="space-y-3">
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Metode Pembayaran</p>
+                                                                <p class="text-sm font-medium text-gray-900">Transfer Bank</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Nama Bank</p>
+                                                                <p class="text-sm font-medium text-gray-900">Bank Central Asia</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Nomor Rekening</p>
+                                                                <p class="text-sm font-medium text-gray-900">1234 5678 9101</p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="text-xs text-gray-500">Syarat Pembayaran</p>
+                                                                <p class="text-sm font-medium text-gray-900">Tempo 30 hari</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Recent Activity -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Aktivitas Terkini</h4>
+                                                        <div class="space-y-4">
+                                                            <div class="flex">
+                                                                <div class="flex-shrink-0">
+                                                                    <i class="fas fa-check-circle h-5 w-5 text-green-500"></i>
+                                                                </div>
+                                                                <div class="ml-3">
+                                                                    <p class="text-sm text-gray-700">
+                                                                        <span class="font-medium">PO-2025-1562</span> disetujui
+                                                                    </p>
+                                                                    <p class="text-xs text-gray-500">15 Jun 2025, 10:30 AM</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex">
+                                                                <div class="flex-shrink-0">
+                                                                    <i class="fas fa-credit-card h-5 w-5 text-blue-500"></i>
+                                                                </div>
+                                                                <div class="ml-3">
+                                                                    <p class="text-sm text-gray-700">
+                                                                        <span class="font-medium">Pembayaran</span> diproses untuk PO-2025-1458
+                                                                    </p>
+                                                                    <p class="text-xs text-gray-500">10 Jun 2025, 2:45 PM</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex">
+                                                                <div class="flex-shrink-0">
+                                                                    <i class="fas fa-file-alt h-5 w-5 text-yellow-500"></i>
+                                                                </div>
+                                                                <div class="ml-3">
+                                                                    <p class="text-sm text-gray-700">
+                                                                        <span class="font-medium">Kontrak Baru</span> ditandatangani - efektif sampai Jun 2026
+                                                                    </p>
+                                                                    <p class="text-xs text-gray-500">5 Jun 2025, 4:20 PM</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Notes -->
+                                                    <div class="bg-gray-50 rounded-lg p-4">
+                                                        <h4 class="text-sm font-medium text-gray-500 mb-3">Catatan</h4>
+                                                        <div>
+                                                            <textarea rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary text-sm" placeholder="Add notes about this supplier..."></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                                    Simpan Perubahan
+                                </button>
+                                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Batal
+                                </button>
+                                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-red-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Blacklist Supplier
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Add Supplier Modal (Hidden by default) -->
+                <div id="addSupplierModal" class="fixed inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                            <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div class="sm:flex sm:items-start">
+                                    <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                            Tambah Supplier Baru
+                                        </h3>
+                                        <div class="p-6">
+                                            <div class="space-y-2">
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Supplier</label>
+                                                        <input type="text" id="namaSupplier" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">ID Tax</label>
+                                                        <input type="text" id="nomorIDTax" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                                                    <textarea rows="2" id="alamatSupplier" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Kontak Utama</label>
+                                                        <input type="text" id="kontakUtama" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                        <div class="mt-2">
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1">Telepon</label>
+                                                            <input type="text" id="nomorTelepon" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                                        <input type="email" id="alamatEmail" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                        <div class="mt-2">
+                                                            <label class="block text-sm font-medium text-gray-700 mb-1">Waktu Tunggu (hari)</label>
+                                                            <input type="number" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Produk/Layanan</label>
+                                                    <input type="text" id="produkLayanan" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+                                                        <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                                                            <option>Transfer Bank</option>
+                                                            <option>Credit</option>
+                                                            <option>Cash</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Syarat Pembayaran</label>
+                                                        <select class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500" required>
+                                                            <option>Tempo 30 Hari</option>
+                                                            <option>Tempo 15 hari</option>
+                                                            <option>Segera setelah diterima</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                                    Simpan Supplier
+                                </button>
+                                <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                    Batal
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+    <script>
+        // Sample JavaScript for interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle supplier detail modal
+            const viewButtons = document.querySelectorAll('[class*="hover:text-primary-dark"]');
+            const supplierModal = document.getElementById('supplierDetailModal');
+            const closeModal = supplierModal.querySelector('[class*="hover:text-gray-500"]');
+            
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    supplierModal.classList.remove('hidden');
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                supplierModal.classList.add('hidden');
+            });
+
+            // Add Supplier Modal Toggle
+                const addSupplierBtn = document.querySelector('.bg-primary');
+                const addSupplierModal = document.getElementById('addSupplierModal');
+                
+                addSupplierBtn.addEventListener('click', function() {
+                    addSupplierModal.classList.remove('hidden');
+                });
+
+                addSupplierModal.querySelector('[class*="hover:bg-gray-50"]').addEventListener('click', function() {
+                    addSupplierModal.classList.add('hidden');
+                });
+
+            // Handle form submission
+                addSupplierModal.querySelector('[class*="hover:bg-opacity-90"]').addEventListener('click', function() {
+                    // Here you would add code to handle form submission
+                    alert('Supplier added successfully!');
+                    addSupplierModal.classList.add('hidden');
+                });
+            });
+            
+            // Tab switching in modal
+            const tabs = document.querySelectorAll('[class*="whitespace-nowrap"]');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    tabs.forEach(t => t.classList.remove('border-primary', 'text-primary'));
+                    tabs.forEach(t => t.classList.add('border-transparent', 'text-gray-500'));
+                    
+                    this.classList.remove('border-transparent', 'text-gray-500');
+                    this.classList.add('border-primary', 'text-primary');
+                });
+            });
+            
+            // Active tab indicator in supplier list
+            const navTabs = document.querySelectorAll('[class*="-mb-px"] a');
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navTabs.forEach(t => t.classList.remove('active-tab'));
+                    this.classList.add('active-tab');
+                });
+            });
+
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+            salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+            procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+
+             const procurementSubmenuItems = document.querySelectorAll('#procurementSubmenu .sidebar-item');
+            procurementSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                procurementSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation(); // Prevent click from bubbling up to the parent
+                procurementSubmenu.classList.add('hidden'); // Close submenu after selection
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>

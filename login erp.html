@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRISMA ERP - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #00a8a8;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background-color: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .login-title h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 38px;
+            color: #777;
+        }
+
+        .form-group input:focus {
+            border-color: #00a8a8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 168, 168, 0.2);
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0 25px;
+            font-size: 13px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        .remember-me input {
+            margin-right: 8px;
+            accent-color: #00a8a8;
+        }
+
+        .forgot-password a {
+            color: #00a8a8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .forgot-password a:hover {
+            color: #008b8b;
+            text-decoration: underline;
+        }
+
+         .button-container {
+            margin-top: 10px;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00a8a8;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .login-button:hover {
+            background-color: #008b8b;
+        }
+        .login-button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+   <div class="login-container">
+        <div class="login-title">
+            <img src="logo_prisma.png" alt="Logo" style="width:80px; margin-bottom:15px; display:block; margin-left:auto; margin-right:auto;">
+            <h1>Selamat Datang di PRISMA ERP</h1>
+        </div>
+
+        <form id="loginForm" action="dashboard.html" method="get">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+            </div>
+
+            <div class="login-options">
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Ingat Saya</label>
+                </div>
+                <div class="forgot-password">
+                    <a href="#">Lupa Password?</a>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button type="submit" class="login-button">Masuk</button>
+            </div>
+        </form>
+   </div>
+   </body>
+</html>

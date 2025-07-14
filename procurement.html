@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRISMA ERP - Procurement</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fafb;
+      color: #1f2937;
+    }
+    /* Scrollbar styling for sidebar */
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background-color: #4b5563;
+      border-radius: 10px;
+    }
+    /* Active sidebar link style */
+    .sidebar a.active {
+      background-color: #00a8a8;
+      color: white;
+    }
+    /* Submenu active underline */
+    nav > ul > li > a.active-submenu {
+      border-bottom: 3px solid #00a8a8;
+      font-weight: 600;
+      color: #0f766e;
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 overflow-auto max-w-screen-xl mx-auto">
+
+    <!-- Header Procurement with submenu -->
+    <header class="mb-3 border-b border-gray-300 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Procurement Overview</h2>
+      </div>
+    </header>
+
+    <!-- Overview cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <article class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-400 uppercase">Permintaan Pembelian</h3>
+          <p class="text-2xl font-bold mt-1 text-teal-700">112</p>
+          <small class="text-yellow-500">permintaan aktif</small>
+        </div>
+        <div class="mt-4">
+          <button class="text-teal-600 text-sm font-semibold hover:underline" onclick="window.location.href='prdetails.html'">Lihat detail &rarr;</button>
+        </div>
+      </article>
+
+      <article class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-400 uppercase">Pesanan Pembelian</h3>
+          <p class="text-2xl font-bold mt-1 text-teal-700">85</p>
+          <small class="text-yellow-500">pesanan aktif</small>
+        </div>
+        <div class="mt-4">
+          <button class="text-teal-600 text-sm font-semibold hover:underline"  onclick="window.location.href='purchaseorder.html'">Lihat detail &rarr;</button>
+        </div>
+      </article>
+
+      <article class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-400 uppercase">Penerimaan Barang</h3>
+          <p class="text-2xl font-bold mt-1 text-teal-700">94</p>
+          <small class="text-yellow-500">penerimaan bulan ini</small>
+        </div>
+        <div class="mt-4">
+          <button class="text-teal-600 text-sm font-semibold hover:underline"  onclick="window.location.href='goodsreceipt.html'">Lihat detail &rarr;</button>
+        </div>
+      </article>
+
+      <article class="bg-white rounded-lg shadow p-5 flex flex-col justify-between">
+        <div>
+          <h3 class="text-sm font-semibold text-gray-400 uppercase">Supplier Terdaftar</h3>
+          <p class="text-2xl font-bold mt-1 text-teal-700">47</p>
+          <small class="text-yellow-500">supplier aktif</small>
+        </div>
+        <div class="mt-4">
+          <button class="text-teal-600 text-sm font-semibold hover:underline" onclick="window.location.href='managesupplier.html'">Kelola supplier &rarr;</button>
+        </div>
+      </article>
+    </section>
+
+    <!-- Rekap Daftar Barang yg Sering Dibeli -->
+    <section class="mb-10 bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-bold mb-3 text-slate-900">Rekap Daftar Barang yang Paling Sering Dibeli</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-teal-500 text-white font-semibold">
+              <th class="p-3 border border-teal-600">Nama Barang</th>
+              <th class="p-3 border border-teal-600">Kode SKU</th>
+              <th class="p-3 border border-teal-600">Jumlah Pembelian</th>
+              <th class="p-3 border border-teal-600">Supplier Terakhir</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="odd:bg-gray-50 even:bg-white">
+              <td class="p-3 border border-teal-600">Printer HP LaserJet Pro M404</td>
+              <td class="p-3 border border-teal-600">SKU-00321</td>
+              <td class="p-3 border border-teal-600">62</td>
+              <td class="p-3 border border-teal-600">PT. MultiTech</td>
+            </tr>
+            <tr class="odd:bg-gray-50 even:bg-white">
+              <td class="p-3 border border-teal-600">Kertas A4 80gsm White</td>
+              <td class="p-3 border border-teal-600">SKU-00578</td>
+              <td class="p-3 border border-teal-600">140</td>
+              <td class="p-3 border border-teal-600">PT. PaperIndo</td>
+            </tr>
+            <tr class="odd:bg-gray-50 even:bg-white">
+              <td class="p-3 border border-teal-600">Toner Cartridge CF258A</td>
+              <td class="p-3 border border-teal-600">SKU-00911</td>
+              <td class="p-3 border border-teal-600">45</td>
+              <td class="p-3 border border-teal-600">PT. MultiTech</td>
+            </tr>
+            <tr class="odd:bg-gray-50 even:bg-white">
+              <td class="p-3 border border-teal-600">Pulpen Ballpoint Blue</td>
+              <td class="p-3 border border-teal-600">SKU-01456</td>
+              <td class="p-3 border border-teal-600">230</td>
+              <td class="p-3 border border-teal-600">PT. Stationery Co.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Analytics Graphs -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Lead Time Pengiriman -->
+      <article class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Analisis Lead Time Pengiriman</h2>
+        <canvas id="leadTimeChart" role="img" aria-label="Grafik garis analisis lead time pengiriman berdasarkan hari"></canvas>
+      </article>
+
+      <!-- Total Pengeluaran per bulan/kuartal -->
+      <article class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-bold text-gray-800">Total Pengeluaran</h2>
+          <select id="periodSelect" class="border border-teal-400 rounded text-sm text-teal-700 px-2 py-1 cursor-pointer">
+            <option value="month" selected>Bulan</option>
+            <option value="quarter">Kuartal</option>
+          </select>
+        </div>
+        <canvas id="expenseChart" role="img" aria-label="Grafik batang total pengeluaran per bulan dan kuartal"></canvas>
+      </article>
+
+      <!-- Placeholder for any additional analytics or summary -->
+      <article class="bg-white rounded-lg shadow p-6 text-center text-gray-400 flex flex-col justify-center items-center select-none">
+        <p class="text-lg font-semibold mb-2">Analisis lainnya segera hadir</p>
+        <p class="text-xs">Grafik dan laporan lebih lengkap akan ditambahkan di update berikutnya.</p>
+      </article>
+    </section>
+
+  <script>
+    // Lead Time Pengiriman Chart (Line chart)
+    const ctxLeadTime = document.getElementById('leadTimeChart').getContext('2d');
+    const leadTimeChart = new Chart(ctxLeadTime, {
+      type: 'line',
+      data: {
+        labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5'],
+        datasets: [{
+          label: 'Lead Time (hari)',
+          data: [4.3, 3.8, 5.2, 4.5, 4.0],
+          borderColor: '#14b8a6',
+          backgroundColor: 'rgba(20,184,166,0.3)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            suggestedMin: 3,
+            suggestedMax: 6,
+            ticks: {
+              stepSize: 0.5
+            },
+            title: {
+              display: true,
+              text: 'Hari',
+              color: '#4b5563',
+              font: { size: 14, weight: 'bold' }
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Minggu',
+              color: '#4b5563',
+              font: { size: 14, weight: 'bold' }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#1f2937'
+            }
+          },
+          tooltip: {
+            enabled: true,
+            backgroundColor: '#14b8a6',
+            titleColor: '#fff',
+            bodyColor: '#fff'
+          }
+        }
+      }
+    });
+
+    // Total Pengeluaran Chart - will switch between month and quarter
+    const ctxExpense = document.getElementById('expenseChart').getContext('2d');
+    const expensesData = {
+      month: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+        data: [15200000, 14300000, 16500000, 13000000, 17000000, 18000000, 15500000, 14800000, 16500000, 17200000, 16000000, 15800000]
+      },
+      quarter: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        data: [46000000, 48500000, 46800000, 49000000]
+      }
+    };
+
+    let currentPeriod = 'month';
+
+    const expenseChart = new Chart(ctxExpense, {
+      type: 'bar',
+      data: {
+        labels: expensesData.month.labels,
+        datasets: [{
+          label: 'Total Pengeluaran (Rp)',
+          data: expensesData.month.data,
+          backgroundColor: '#14b8a6',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#374151',
+              callback: function(val) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+              }
+            },
+            title: {
+              display: true,
+              text: 'Rupiah (Rp)',
+              color: '#4b5563',
+              font: { size: 14, weight: 'bold' }
+            }
+          },
+          x: {
+            ticks: {
+              color: '#374151'
+            },
+            title: {
+              display: true,
+              text: currentPeriod === 'month' ? 'Bulan' : 'Kuartal',
+              color: '#4b5563',
+              font: { size: 14, weight: 'bold' }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: function(context) {
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(context.parsed.y);
+              }
+            },
+            backgroundColor: '#14b8a6',
+            titleColor: '#fff',
+            bodyColor: '#fff'
+          }
+        }
+      }
+    });
+
+    // Change period based on dropdown
+    document.getElementById('periodSelect').addEventListener('change', function(){
+      currentPeriod = this.value;
+      expenseChart.data.labels = expensesData[currentPeriod].labels;
+      expenseChart.data.datasets[0].data = expensesData[currentPeriod].data;
+      expenseChart.options.scales.x.title.text = currentPeriod === 'month' ? 'Bulan' : 'Kuartal';
+      expenseChart.update();
+    });
+  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+        inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const currentPage = window.location.pathname.split("/").pop();
+
+    // Daftar halaman di tiap submenu
+    const menus = {
+      procurement: [
+        "purchaserequest.html",
+        "purchaseorder.html",
+        "goodsreceipt.html",
+        "managesupplier.html"
+      ],
+      sales: [
+        "orderlist.html",
+        "neworder.html",
+        "invoices.html",
+        "customer.html"
+      ],
+      inventory: [
+        "manageproduct.html",
+        "stockmanage.html"
+      ]
+    };
+
+    // Procurement
+    if (menus.procurement.includes(currentPage)) {
+      document.getElementById("procurementSubmenu")?.classList.remove("hidden");
+      document.getElementById("procurementMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Sales
+    if (menus.sales.includes(currentPage)) {
+      document.getElementById("salesSubmenu")?.classList.remove("hidden");
+      document.getElementById("salesMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Inventory
+    if (menus.inventory.includes(currentPage)) {
+      document.getElementById("inventorySubmenu")?.classList.remove("hidden");
+      document.getElementById("inventoryMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Tambahan: Tandai item submenu yang sedang aktif
+    const links = document.querySelectorAll(".sidebar-item");
+    links.forEach(link => {
+      if (link.href.includes(currentPage)) {
+        link.classList.add("bg-white", "text-[#00a8a8]", "font-bold", "rounded-md");
+      }
+    });
+  });
+</script>
+</main>
+</body>
+</html>
+

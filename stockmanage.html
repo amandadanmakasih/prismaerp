@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelolaan Stok</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00A8A8',
+                        secondary: '#A5B1C2',
+                        background: '#F4F7FA',
+                        surface: '#FFFFFF',
+                        accent: '#B9E9E0',
+                        warning: '#FDD59E',
+                        success: '#A0E8D0',
+                        error: '#FFA5A5',
+                        textPrimary: '#2D2D2D',
+                        textSecondary: '#867280',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .stok-rendah { border-left: 4px solid #ef4444; }
+        .stok-aman { border-left: 4px solid #10b981; }
+        .stok-perhatian { border-left: 4px solid #f59e0b; }
+        .notification-badge {
+            display: inline-block;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 5px;
+            font-size: 12px;
+            line-height: 20px;
+            border-radius: 10px;
+            top: -5px;
+            right: -5px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        
+        .dropdown-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar (gunakan format stockmanage.html, tidak perlu sidebar dari stock2.html) -->
+        <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200 min-h-screen">
+            <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+                <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+                <h1 class="text-xl font-bold text-white">PRISMA</h1>
+            </div>
+            <div class="flex-1 overflow-y-auto py-2">
+                <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 min-h-screen flex flex-col">
+            <!-- Header -->
+            <div class="bg-white border-b border-gray-200 py-4 px-8 flex items-center justify-between">
+                <h1 class="text-2xl font-bold text-gray-800">Pengelolaan Stok</h1>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 p-6">
+                <!-- Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Total Produk</p>
+                                <p class="text-2xl font-bold">248</p>
+                            </div>
+                            <div class="bg-blue-100 text-blue-600 p-3 rounded-full">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Stok Rendah</p>
+                                <p class="text-2xl font-bold text-red-600">12</p>
+                            </div>
+                            <div class="bg-red-100 text-red-600 p-3 rounded-full">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Transaksi Bulan Ini</p>
+                                <p class="text-2xl font-bold">87</p>
+                            </div>
+                            <div class="bg-green-100 text-green-600 p-3 rounded-full">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm">Nilai Stok</p>
+                                <p class="text-2xl font-bold">Rp 284,5 Jt</p>
+                            </div>
+                            <div class="bg-purple-100 text-purple-600 p-3 rounded-full">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="flex border-b">
+                        <button data-tab="stock-list" class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-teal-600 flex items-center border-b-2 border-transparent hover:border-teal-400 active">
+                            <i class="fas fa-list-ul mr-2"></i>
+                            Daftar Stok
+                        </button>
+                        <button data-tab="incoming" class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-teal-600 flex items-center border-b-2 border-transparent hover:border-teal-400">
+                            <i class="fas fa-arrow-down mr-2"></i>
+                            Stok Masuk
+                        </button>
+                        <button data-tab="outgoing" class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-teal-600 flex items-center border-b-2 border-transparent hover:border-teal-400">
+                            <i class="fas fa-arrow-up mr-2"></i>
+                            Stok Keluar
+                        </button>
+                        <button data-tab="notifications" class="tab-button px-6 py-3 font-medium text-gray-600 hover:text-teal-600 flex items-center border-b-2 border-transparent hover:border-teal-400 relative">
+                            <i class="fas fa-bell mr-2"></i>
+                            Notifikasi
+                            <span class="notification-badge bg-red-500 text-white absolute top-1 right-1">3</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="p-6">
+                        <!-- Daftar Stok -->
+                        <div id="stock-list" class="tab-content active">
+                            <div class="flex justify-between items-center mb-4">
+                                <div class="flex space-x-2">
+                                    <input type="text" placeholder="Cari produk..." class="px-4 py-2 border rounded-lg w-64">
+                                    <select class="px-4 py-2 border rounded-lg bg-white">
+                                        <option>Semua Lokasi</option>
+                                        <option>Gudang Utama</option>
+                                        <option>Gudang Cabang 1</option>
+                                        <option>Gudang Cabang 2</option>
+                                    </select>
+                                    <select class="px-4 py-2 border rounded-lg bg-white">
+                                        <option>Semua Kategori</option>
+                                        <option>Elektronik</option>
+                                        <option>Makanan</option>
+                                        <option>Peralatan</option>
+                                    </select>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-teal-200 flex items-center">
+                                        <i class="fas fa-filter mr-2"></i>
+                                        Filter
+                                    </button>
+                                    <button class="px-4 py-2 text-white-600 bg-teal-50 rounded-lg hover:bg-teal-100 flex items-center">
+                                        <i class="fas fa-file-export mr-2"></i>
+                                        Ekspor
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kode</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Tersedia</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Dipesan</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok Minimum</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="stok-rendah hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5214db43-2dca-4447-adfd-49da7d96c8d4.png" alt="Laptop" class="w-10 h-10 rounded-md mr-3">
+                                                <div>
+                                                    <div class="font-medium">Laptop Acer Aspire 5</div>
+                                                    <div class="text-gray-500 text-sm">Elektronik</div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">PROD-001</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Gudang Utama</td>
+                                            <td class="px-6 py-4 whitespace-nowrap font-medium">2</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">1</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">5</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Stok Rendah</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <button class="text-teal-600 hover:text-teal-800 mr-3">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="text-gray-600 hover:text-gray-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="stok-perhatian hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/57eee599-d8f7-441c-8584-443ddc01ca0e.png" alt="Mouse" class="w-10 h-10 rounded-md mr-3">
+                                                <div>
+                                                    <div class="font-medium">Mouse Wireless Logitech</div>
+                                                    <div class="text-gray-500 text-sm">Aksesoris</div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">PROD-002</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Gudang Cabang 1</td>
+                                            <td class="px-6 py-4 whitespace-nowrap font-medium">6</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">3</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">10</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Perlu Diperhatikan</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <button class="text-teal-600 hover:text-teal-800 mr-3">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="text-gray-600 hover:text-gray-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr class="stok-aman hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap flex items-center">
+                                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2cdf7c77-bb20-4dd4-a94c-d3b110739046.png" alt="Headphone" class="w-10 h-10 rounded-md mr-3">
+                                                <div>
+                                                    <div class="font-medium">Headphone Sony MDR-ZX110</div>
+                                                    <div class="text-gray-500 text-sm">Audio</div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">PROD-003</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Gudang Cabang 2</td>
+                                            <td class="px-6 py-4 whitespace-nowrap font-medium">25</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">5</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">15</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Stok Aman</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <button class="text-teal-600 hover:text-teal-800 mr-3">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="text-gray-600 hover:text-gray-800">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Stok Masuk -->
+                        <div id="incoming" class="tab-content">
+                            <div class="mb-6 flex justify-end">
+                                <button id="btn-tambah-stok-masuk" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Stok Masuk
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referensi</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi Sumber</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi Tujuan</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kuantitas</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-teal-600">IN-202306-001</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">15 Jun 2023</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Pembelian</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Pemasok ABC</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Gudang Utama</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Laptop Acer Aspire 5</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">5</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Selesai</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Stok Keluar -->
+                        <div id="outgoing" class="tab-content">
+                            <div class="mb-6 flex justify-end">
+                                <button id="btn-tambah-stok-keluar" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Stok Keluar
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referensi</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi Sumber</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi Tujuan</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produk</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kuantitas</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-teal-600">OUT-202306-001</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">20 Jun 2023</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Penjualan</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Gudang Utama</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Pelanggan ABC</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">Laptop Acer Aspire 5</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">3</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Selesai</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Notifikasi -->
+                        <div id="notifications" class="tab-content">
+                            <div class="mb-6">
+                                <h2 class="text-xl font-semibold mb-4">Notifikasi Stok</h2>
+                                <p class="text-gray-600 mb-4">Pantau produk dengan stok rendah atau yang memerlukan perhatian khusus.</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="bg-white rounded-lg shadow p-6">
+                                        <h3 class="font-semibold text-lg mb-4 flex items-center">
+                                            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                            Stok Rendah
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div class="flex items-start p-4 border rounded-lg hover:bg-gray-50">
+                                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/dad0014c-bac9-4fdb-bd9a-adb4e0e87749.png" alt="Laptop" class="w-12 h-12 rounded-md mr-4">
+                                                <div class="flex-1">
+                                                    <div class="font-medium">Laptop Acer Aspire 5</div>
+                                                    <div class="text-sm text-gray-500 mb-1">Kode: PROD-001</div>
+                                                    <div class="flex items-center text-sm">
+                                                        <span class="text-red-600 font-medium">Stok: 2</span>
+                                                        <span class="mx-2">•</span>
+                                                        <span>Minimum: 5</span>
+                                                    </div>
+                                                </div>
+                                                <button class="text-teal-600 hover:text-teal-800 ml-4">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white rounded-lg shadow p-6">
+                                        <h3 class="font-semibold text-lg mb-4 flex items-center">
+                                            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                            Perlu Perhatian
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div class="flex items-start p-4 border rounded-lg hover:bg-gray-50">
+                                                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/ccb68bc1-96ee-47c4-b820-62ea9bab4aff.png" alt="Mouse" class="w-12 h-12 rounded-md mr-4">
+                                                <div class="flex-1">
+                                                    <div class="font-medium">Mouse Wireless Logitech</div>
+                                                    <div class="text-sm text-gray-500 mb-1">Kode: PROD-002</div>
+                                                    <div class="flex items-center text-sm">
+                                                        <span class="text-yellow-600 font-medium">Stok: 6</span>
+                                                        <span class="mx-2">•</span>
+                                                        <span>Minimum: 10</span>
+                                                    </div>
+                                                </div>
+                                                <button class="text-teal-600 hover:text-teal-800 ml-4">
+                                                    <i class="fas fa-plus-circle"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END Notifikasi -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Stok Masuk -->
+    <div id="modal-stok-masuk" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-xl p-6 relative">
+            <button id="close-modal-stok-masuk" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h4 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="fas fa-plus text-[#00a8a8]"></i>
+                Tambah Stok Masuk
+            </h4>
+            <form id="form-stok-masuk" class="grid grid-cols-1 md:grid-cols-2 gap-6" autocomplete="off">
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="tanggal-masuk">Tanggal</label>
+                    <input type="date" id="tanggal-masuk" name="tanggal-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="referensi-masuk">Referensi</label>
+                    <input type="text" id="referensi-masuk" name="referensi-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="IN-202306-003" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="jenis-masuk">Jenis</label>
+                    <select id="jenis-masuk" name="jenis-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                        <option>Pembelian</option>
+                        <option>Retur</option>
+                        <option>Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="produk-masuk">Produk</label>
+                    <input type="text" id="produk-masuk" name="produk-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="lokasi-sumber-masuk">Lokasi Sumber</label>
+                    <input type="text" id="lokasi-sumber-masuk" name="lokasi-sumber-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="lokasi-tujuan-masuk">Lokasi Tujuan</label>
+                    <input type="text" id="lokasi-tujuan-masuk" name="lokasi-tujuan-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="kuantitas-masuk">Kuantitas</label>
+                    <input type="number" id="kuantitas-masuk" name="kuantitas-masuk" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" min="1" required>
+                </div>
+                <div class="md:col-span-2 flex justify-end items-end gap-2">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                    <button type="button" id="batal-stok-masuk" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Stok Keluar -->
+    <div id="modal-stok-keluar" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-xl p-6 relative">
+            <button id="close-modal-stok-keluar" class="absolute top-3 right-3 text-gray-400 hover:text-red-500 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h4 class="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                <i class="fas fa-plus text-[#00a8a8]"></i>
+                Tambah Stok Keluar
+            </h4>
+            <form id="form-stok-keluar" class="grid grid-cols-1 md:grid-cols-2 gap-6" autocomplete="off">
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="tanggal-keluar">Tanggal</label>
+                    <input type="date" id="tanggal-keluar" name="tanggal-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="referensi-keluar">Referensi</label>
+                    <input type="text" id="referensi-keluar" name="referensi-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="OUT-202306-003" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="jenis-keluar">Jenis</label>
+                    <select id="jenis-keluar" name="jenis-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                        <option>Penjualan</option>
+                        <option>Kerusakan</option>
+                        <option>Transfer</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="produk-keluar">Produk</label>
+                    <input type="text" id="produk-keluar" name="produk-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="lokasi-sumber-keluar">Lokasi Sumber</label>
+                    <input type="text" id="lokasi-sumber-keluar" name="lokasi-sumber-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="lokasi-tujuan-keluar">Lokasi Tujuan</label>
+                    <input type="text" id="lokasi-tujuan-keluar" name="lokasi-tujuan-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="kuantitas-keluar">Kuantitas</label>
+                    <input type="number" id="kuantitas-keluar" name="kuantitas-keluar" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" min="1" required>
+                </div>
+                <div class="md:col-span-2 flex justify-end items-end gap-2">
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                    <button type="button" id="batal-stok-keluar" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                        <i class="fas fa-times"></i> Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                tabButtons.forEach(btn => btn.classList.remove('active', 'border-teal-600', 'text-teal-600'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                button.classList.add('active', 'border-teal-600', 'text-teal-600');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        // Initialize first tab as active
+        if (tabButtons.length > 0) {
+            tabButtons[0].classList.add('active', 'border-teal-600', 'text-teal-600');
+        }
+
+        // Modal Stok Masuk
+        const btnTambahStokMasuk = document.getElementById('btn-tambah-stok-masuk');
+        const modalStokMasuk = document.getElementById('modal-stok-masuk');
+        const closeModalStokMasuk = document.getElementById('close-modal-stok-masuk');
+        const batalStokMasuk = document.getElementById('batal-stok-masuk');
+        if (btnTambahStokMasuk && modalStokMasuk) {
+            btnTambahStokMasuk.addEventListener('click', function(e) {
+                e.preventDefault();
+                modalStokMasuk.classList.remove('hidden');
+            });
+        }
+        if (closeModalStokMasuk && modalStokMasuk) {
+            closeModalStokMasuk.addEventListener('click', function() {
+                modalStokMasuk.classList.add('hidden');
+            });
+        }
+        if (batalStokMasuk && modalStokMasuk) {
+            batalStokMasuk.addEventListener('click', function() {
+                modalStokMasuk.classList.add('hidden');
+            });
+        }
+        // Modal Stok Keluar
+        const btnTambahStokKeluar = document.getElementById('btn-tambah-stok-keluar');
+        const modalStokKeluar = document.getElementById('modal-stok-keluar');
+        const closeModalStokKeluar = document.getElementById('close-modal-stok-keluar');
+        const batalStokKeluar = document.getElementById('batal-stok-keluar');
+        if (btnTambahStokKeluar && modalStokKeluar) {
+            btnTambahStokKeluar.addEventListener('click', function(e) {
+                e.preventDefault();
+                modalStokKeluar.classList.remove('hidden');
+            });
+        }
+        if (closeModalStokKeluar && modalStokKeluar) {
+            closeModalStokKeluar.addEventListener('click', function() {
+                modalStokKeluar.classList.add('hidden');
+            });
+        }
+        if (batalStokKeluar && modalStokKeluar) {
+            batalStokKeluar.addEventListener('click', function() {
+                modalStokKeluar.classList.add('hidden');
+            });
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+        });
+
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+        const inventorySubmenu = document.getElementById('inventorySubmenu');
+        const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+        if (inventoryMenuBtn && inventorySubmenu && inventoryMenuIcon) {
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+        const inventorySubmenuItems = document.querySelectorAll('#inventorySubmenu .sidebar-item');
+        inventorySubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                inventorySubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation();
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    });
+</script>
+</body>
+</html>

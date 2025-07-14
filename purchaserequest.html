@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permintaan Pembelian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .stepper .step {
+            @apply flex-1 flex flex-col items-center;
+        }
+        .stepper .circle {
+            @apply w-8 h-8 flex items-center justify-center rounded-full border-2 border-gray-300 bg-white text-gray-500 font-bold;
+        }
+        .stepper .active .circle {
+            @apply border-[#00a8a8] text-[#00a8a8] bg-white;
+        }
+        .stepper .done .circle {
+            @apply border-[#00a8a8] bg-[#00a8a8] text-white;
+        }
+        .stepper .label {
+            @apply mt-2 text-xs text-gray-500;
+        }
+        .stepper .active .label,
+        .stepper .done .label {
+            @apply text-[#00a8a8] font-semibold;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-gray-50">
+    <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+            <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+            <h1 class="text-xl font-bold text-white">PRISMA</h1>
+        </div>
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 py-4 px-8 flex items-center justify-between">
+            <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                Permintaan Pembelian
+            </h2>
+        </header>
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+            <!-- Stepper Tracking Status -->
+            <div class="stepper flex mb-8">
+                <div class="step done">
+                    <div class="circle">1</div>
+                    <div class="label flex items-center">
+                        <i class="fas fa-file-alt mr-1 text-xs"></i> Draft
+                    </div>
+                </div>
+                <div class="flex items-center w-8 h-1 bg-gray-300 mx-2 my-4"></div>
+                <div class="step active">
+                    <div class="circle">2</div>
+                    <div class="label flex items-center">
+                        <i class="fas fa-clock mr-1 text-xs"></i> Menunggu
+                    </div>
+                </div>
+                <div class="flex items-center w-8 h-1 bg-gray-300 mx-2 my-4"></div>
+                <div class="step">
+                    <div class="circle">3</div>
+                    <div class="label flex items-center">
+                        <i class="fas fa-check-circle mr-1 text-xs"></i> Approval
+                    </div>
+                </div>
+                <div class="flex items-center w-8 h-1 bg-gray-300 mx-2 my-4"></div>
+                <div class="step">
+                    <div class="circle">4</div>
+                    <div class="label flex items-center">
+                        <i class="fas fa-thumbs-up mr-1 text-xs"></i> Disetujui
+                    </div>
+                </div>
+                <div class="flex items-center w-8 h-1 bg-gray-300 mx-2 my-4"></div>
+                <div class="step">
+                    <div class="circle">5</div>
+                    <div class="label flex items-center">
+                        <i class="fas fa-times-circle mr-1 text-xs"></i> Dibatalkan
+                    </div>
+                </div>
+            </div>
+            <!-- Form Permintaan Pembelian -->
+            <div class="bg-white rounded shadow p-6 max-w-9xl mx-auto mb-1">
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="tanggal">Tanggal Permintaan</label>
+                            <input type="date" id="tanggal" name="tanggal" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-1" for="pemohon">Pemohon</label>
+                            <input type="text" id="pemohon" name="pemohon" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" value="User " readonly>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1" for="alasan">Alasan Pengadaan</label>
+                        <textarea id="alasan" name="alasan" rows="2" class="w-full border border-slate-300 rounded px-3 py-2 text-sm" placeholder="Contoh: Stok habis, permintaan pelanggan, dll" required></textarea>
+                    </div>
+                    <!-- Tabel Item Permintaan -->
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Daftar Item Permintaan</label>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-slate-900 mb-2">
+                                <thead class="bg-slate-100">
+                                    <tr>
+                                        <th class="p-3 border-b border-slate-200">Produk</th>
+                                        <th class="p-3 border-b border-slate-200">SKU</th>
+                                        <th class="p-3 border-b border-slate-200">Jumlah</th>
+                                        <th class="p-3 border-b border-slate-200">Satuan</th>
+                                        <th class="p-3 border-b border-slate-200">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="item-list">
+                                    <tr>
+                                        <td class="p-3 border-b border-slate-200">
+                                            <input type="text" name="produk[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" placeholder="Nama Produk" required>
+                                        </td>
+                                        <td class="p-3 border-b border-slate-200">
+                                            <input type="text" name="sku[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" placeholder="SKU" required>
+                                        </td>
+                                        <td class="p-3 border-b border-slate-200">
+                                            <input type="number" name="jumlah[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" min="1" required>
+                                        </td>
+                                        <td class="p-3 border-b border-slate-200">
+                                            <select name="satuan[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                                                <option>Unit</option>
+                                                <option>Pcs</option>
+                                                <option>Set</option>
+                                            </select>
+                                        </td>
+                                        <td class="p-3 border-b border-slate-200 text-center">
+                                            <button type="button" class="remove-item text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button type="button" id="add-item" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded text-sm flex items-center gap-1 transition active:scale-95">
+                            <i class="fas fa-plus"></i> Tambah Item
+                        </button>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                            <i class="fas fa-paper-plane"></i> Ajukan Permintaan
+                        </button>
+                        <button type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded font-semibold flex items-center gap-2 transition active:scale-95">
+                            <i class="fas fa-times"></i> Batal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    <script>
+        // Sidebar Inventory & Procurement submenu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+            if (salesMenuBtn && salesSubmenu && salesMenuIcon) {
+                salesMenuBtn.addEventListener('click', function() {
+                    salesSubmenu.classList.toggle('hidden');
+                    salesMenuIcon.classList.toggle('rotate-180');
+                });
+            }
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+            if (inventoryMenuBtn && inventorySubmenu && inventoryMenuIcon) {
+                inventoryMenuBtn.addEventListener('click', function() {
+                    inventorySubmenu.classList.toggle('hidden');
+                    inventoryMenuIcon.classList.toggle('rotate-180');
+                });
+            }
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+            if (procurementMenuBtn && procurementSubmenu && procurementMenuIcon) {
+                procurementMenuBtn.addEventListener('click', function() {
+                    procurementSubmenu.classList.toggle('hidden');
+                    procurementMenuIcon.classList.toggle('rotate-180');
+                });
+            }
+        });
+
+        // Dynamic add/remove item row
+        document.getElementById('add-item').addEventListener('click', function() {
+            const tbody = document.getElementById('item-list');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="p-3 border-b border-slate-200">
+                    <input type="text" name="produk[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" placeholder="Nama Produk" required>
+                </td>
+                <td class="p-3 border-b border-slate-200">
+                    <input type="text" name="sku[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" placeholder="SKU" required>
+                </td>
+                <td class="p-3 border-b border-slate-200">
+                    <input type="number" name="jumlah[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm" min="1" required>
+                </td>
+                <td class="p-3 border-b border-slate-200">
+                    <select name="satuan[]" class="w-full border border-slate-300 rounded px-2 py-1 text-sm">
+                        <option>Unit</option>
+                        <option>Pcs</option>
+                        <option>Set</option>
+                    </select>
+                </td>
+                <td class="p-3 border-b border-slate-200 text-center">
+                    <button type="button" class="remove-item text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('item-list').addEventListener('click', function(e) {
+            if (e.target.closest('.remove-item')) {
+                const row = e.target.closest('tr');
+                if (row) {
+                    row.remove();
+                }
+            }
+        });
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you can handle the form submission, e.g., send data to the server
+            alert('Permintaan Pembelian berhasil diajukan!');
+            this.reset(); // Reset the form after submission
+        });
+        // Add active class to the current sidebar item
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        // Add active class to the current step in the stepper
+        document.querySelectorAll('.stepper .step').forEach(step => {
+            step.addEventListener('click', function() {
+                document.querySelectorAll('.stepper .step').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        // Add done class to previous
+        document.querySelectorAll('.stepper .step').forEach((step, index) => {
+            if (index < 1) { // Assuming the first step is done
+                step.classList.add('done');
+            }
+        });
+        // Add hover effect to sidebar items
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('mouseover', function() {
+                this.classList.add('hover:text-white');
+            });
+            item.addEventListener('mouseout', function() {
+                this.classList.remove('hover:text-white');
+            });
+        });
+        // Add hover effect to stepper circles
+        document.querySelectorAll('.stepper .circle').forEach(circle => {
+            circle.addEventListener('mouseover', function() {
+                this.classList.add('hover:bg-gray-200');
+            });
+            circle.addEventListener('mouseout', function() {
+                this.classList.remove('hover:bg-gray-200');
+            });
+        });
+        // Add hover effect to stepper labels
+        document.querySelectorAll('.stepper .label').forEach(label => {
+            label.addEventListener('mouseover', function() {
+                this.classList.add('hover:text-gray-700');
+            });
+            label.addEventListener('mouseout', function() {
+                this.classList.remove('hover:text-gray-700');
+            });
+        });
+        // Add hover effect to buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mouseover', function() {
+                this.classList.add('hover:bg-teal-700');
+            });
+            button.addEventListener('mouseout', function() {
+                this.classList.remove('hover:bg-teal-700');
+            });
+        });
+        // Add active effect to buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', function() {
+                this.classList.add('active:scale-95');
+            });
+            button.addEventListener('mouseup', function() {
+                this.classList.remove('active:scale-95');
+            });
+        });
+        // Add focus effect to inputs
+        document.querySelectorAll('input, textarea, select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.classList.add('border-teal-500');
+            });
+            input.addEventListener('blur', function() {
+                this.classList.remove('border-teal-500');
+            });
+        });
+        // Add focus effect to labels
+        document.querySelectorAll('label').forEach(label => {
+            label.addEventListener('focus', function() {
+                this.classList.add('text-teal-500');
+            });
+            label.addEventListener('blur', function() {
+                this.classList.remove('text-teal-500');
+            });
+        });
+        // Add hover effect to stepper labels
+        document.querySelectorAll('.stepper .label').forEach(label => {
+            label.addEventListener('mouseover', function() {
+                this.classList.add('hover:text-gray-700');
+            });
+            label.addEventListener('mouseout', function() {
+                this.classList.remove('hover:text-gray-700');
+            });
+        });
+        // Add hover effect to stepper circles
+        document.querySelectorAll('.stepper .circle').forEach(circle => {
+            circle.addEventListener('mouseover', function() {
+                this.classList.add('hover:bg-gray-200');
+            });
+            circle.addEventListener('mouseout', function() {
+                this.classList.remove('hover:bg-gray-200');
+            });
+        });
+        // Add hover effect to stepper steps
+        document.querySelectorAll('.stepper .step').forEach(step => {
+            step.addEventListener('mouseover', function() {
+                this.classList.add('hover:bg-gray-100');
+            });
+            step.addEventListener('mouseout', function() {
+                this.classList.remove('hover:bg-gray-100');
+            });
+        });
+        
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>

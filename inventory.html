@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Module</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background-color: #F4F7FA; }
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-gray-50">
+    <!-- Sidebar -->
+    <!-- ...existing code... -->
+<div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+    <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+    <div class="flex-1 overflow-y-auto py-2">
+        <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1 hidden">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+<!-- Main Content -->
+<div class="flex-1 flex flex-col overflow-hidden">
+    <header class="bg-white border-b border-gray-200 py-4 px-8 flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-slate-900">Inventory Overview</h2>
+    </header>
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Card Manajemen Produk -->
+            <div class="card bg-white rounded-lg p-6 flex flex-col justify-between shadow">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-cube text-2xl text-[#00a8a8] mr-3"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Manajemen Produk</h3>
+                        <p class="text-sm text-gray-500">Kelola data produk, kategori, dan detail produk Anda.</p>
+                    </div>
+                </div>
+                <a href="manageproduct.html" class="mt-4 inline-flex items-center text-[#00a8a8] hover:underline font-medium text-sm">
+                    Lihat Produk <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                </a>
+            </div>
+            <!-- Card Pengelolaan Stok -->
+            <div class="card bg-white rounded-lg p-6 flex flex-col justify-between shadow">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-warehouse text-2xl text-[#00a8a8] mr-3"></i>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Pengelolaan Stok</h3>
+                        <p class="text-sm text-gray-500">Pantau dan atur stok barang di gudang secara real-time.</p>
+                    </div>
+                </div>
+                <a href="stockmanage.html" class="mt-4 inline-flex items-center text-[#00a8a8] hover:underline font-medium text-sm">
+                    Lihat Stok <i class="fas fa-chevron-right ml-2 text-xs"></i>
+                </a>
+            </div>
+        </div>
+        <!-- Statistik Inventory -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="bg-gray-50 p-5 rounded shadow flex flex-col items-center">
+                <i class="fas fa-cubes text-2xl text-[#00a8a8] mb-2"></i>
+                <div class="text-lg font-bold text-gray-800">120</div>
+                <div class="text-xs text-gray-500">Total Produk</div>
+            </div>
+            <div class="bg-gray-50 p-5 rounded shadow flex flex-col items-center">
+                <i class="fas fa-warehouse text-2xl text-[#00a8a8] mb-2"></i>
+                <div class="text-lg font-bold text-gray-800">5</div>
+                <div class="text-xs text-gray-500">Gudang Aktif</div>
+            </div>
+            <div class="bg-gray-50 p-5 rounded shadow flex flex-col items-center">
+                <i class="fas fa-exclamation-triangle text-2xl text-yellow-400 mb-2"></i>
+                <div class="text-lg font-bold text-gray-800">8</div>
+                <div class="text-xs text-gray-500">Stok Hampir Habis</div>
+            </div>
+        </div>
+<!-- Grafik Dummy Inventory (grafik garis memenuhi kolom, rekap di samping grafik) -->
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+        <i class="fas fa-chart-line text-[#00a8a8]"></i>
+        Grafik Pergerakan Stok Bulanan
+    </h3>
+    <div class="flex flex-col md:flex-row gap-6 items-stretch">
+        <!-- Grafik garis -->
+        <div class="flex-1 flex items-center">
+            <div class="w-full">
+                <svg viewBox="0 0 800 320" width="100%" height="320" class="block">
+                    <!-- Sumbu Y -->
+                    <line x1="60" y1="40" x2="60" y2="260" stroke="#cbd5e1" stroke-width="2"/>
+                    <!-- Sumbu X -->
+                    <line x1="60" y1="260" x2="760" y2="260" stroke="#cbd5e1" stroke-width="2"/>
+                    <!-- Garis grid horizontal -->
+                    <line x1="60" y1="80" x2="760" y2="80" stroke="#e5e7eb" stroke-width="1" />
+                    <line x1="60" y1="140" x2="760" y2="140" stroke="#e5e7eb" stroke-width="1" />
+                    <line x1="60" y1="200" x2="760" y2="200" stroke="#e5e7eb" stroke-width="1" />
+                    <!-- Label Y -->
+                    <text x="50" y="265" font-size="14" text-anchor="end" fill="#64748b">0</text>
+                    <text x="50" y="205" font-size="14" text-anchor="end" fill="#64748b">40</text>
+                    <text x="50" y="145" font-size="14" text-anchor="end" fill="#64748b">80</text>
+                    <text x="50" y="85" font-size="14" text-anchor="end" fill="#64748b">120</text>
+                    <text x="50" y="45" font-size="14" text-anchor="end" fill="#64748b">160</text>
+                    <!-- Grafik garis stok (dummy data, titik sesuai label) -->
+                    <polyline 
+                        fill="none" 
+                        stroke="#00a8a8" 
+                        stroke-width="4" 
+                        points="
+                            100,240
+                            160,140
+                            220,110
+                            280,80
+                            340,170
+                            400,60
+                            460,100
+                            520,130
+                            580,70
+                            640,110
+                            700,200
+                            760,140
+                        "
+                    />
+                    <!-- Titik dan label stok -->
+                    <circle cx="100" cy="240" r="6" fill="#00a8a8"/>
+                    <text x="100" y="230" font-size="13" text-anchor="middle" fill="#00a8a8">20</text>
+                    <circle cx="160" cy="140" r="6" fill="#00a8a8"/>
+                    <text x="160" y="130" font-size="13" text-anchor="middle" fill="#00a8a8">80</text>
+                    <circle cx="220" cy="110" r="6" fill="#00a8a8"/>
+                    <text x="220" y="100" font-size="13" text-anchor="middle" fill="#00a8a8">100</text>
+                    <circle cx="280" cy="80" r="6" fill="#00a8a8"/>
+                    <text x="280" y="70" font-size="13" text-anchor="middle" fill="#00a8a8">120</text>
+                    <circle cx="340" cy="170" r="6" fill="#00a8a8"/>
+                    <text x="340" y="160" font-size="13" text-anchor="middle" fill="#00a8a8">60</text>
+                    <circle cx="400" cy="60" r="6" fill="#00a8a8"/>
+                    <text x="400" y="50" font-size="13" text-anchor="middle" fill="#00a8a8">140</text>
+                    <circle cx="460" cy="100" r="6" fill="#00a8a8"/>
+                    <text x="460" y="90" font-size="13" text-anchor="middle" fill="#00a8a8">110</text>
+                    <circle cx="520" cy="130" r="6" fill="#00a8a8"/>
+                    <text x="520" y="120" font-size="13" text-anchor="middle" fill="#00a8a8">90</text>
+                    <circle cx="580" cy="70" r="6" fill="#00a8a8"/>
+                    <text x="580" y="60" font-size="13" text-anchor="middle" fill="#00a8a8">130</text>
+                    <circle cx="640" cy="110" r="6" fill="#00a8a8"/>
+                    <text x="640" y="100" font-size="13" text-anchor="middle" fill="#00a8a8">100</text>
+                    <circle cx="700" cy="200" r="6" fill="#00a8a8"/>
+                    <text x="700" y="190" font-size="13" text-anchor="middle" fill="#00a8a8">40</text>
+                    <circle cx="760" cy="140" r="6" fill="#00a8a8"/>
+                    <text x="760" y="130" font-size="13" text-anchor="middle" fill="#00a8a8">80</text>
+                    <!-- Label bulan -->
+                    <text x="100" y="290" font-size="13" text-anchor="middle" fill="#64748b">Jan</text>
+                    <text x="160" y="290" font-size="13" text-anchor="middle" fill="#64748b">Feb</text>
+                    <text x="220" y="290" font-size="13" text-anchor="middle" fill="#64748b">Mar</text>
+                    <text x="280" y="290" font-size="13" text-anchor="middle" fill="#64748b">Apr</text>
+                    <text x="340" y="290" font-size="13" text-anchor="middle" fill="#64748b">Mei</text>
+                    <text x="400" y="290" font-size="13" text-anchor="middle" fill="#64748b">Jun</text>
+                    <text x="460" y="290" font-size="13" text-anchor="middle" fill="#64748b">Jul</text>
+                    <text x="520" y="290" font-size="13" text-anchor="middle" fill="#64748b">Agu</text>
+                    <text x="580" y="290" font-size="13" text-anchor="middle" fill="#64748b">Sep</text>
+                    <text x="640" y="290" font-size="13" text-anchor="middle" fill="#64748b">Okt</text>
+                    <text x="700" y="290" font-size="13" text-anchor="middle" fill="#64748b">Nov</text>
+                    <text x="760" y="290" font-size="13" text-anchor="middle" fill="#64748b">Des</text>
+                </svg>
+            </div>
+        </div>
+        <!-- Rekap Data Grafik -->
+        <div class="w-full md:w-64 flex-shrink-0 flex flex-col gap-4 justify-center mt-6 md:mt-0">
+            <div class="bg-gray-50 rounded p-4 flex flex-col items-center">
+                <span class="text-xs text-gray-500 mb-1">Rata-rata Stok Bulanan</span>
+                <span class="text-lg font-bold text-[#00a8a8]">
+                    87
+                </span>
+            </div>
+            <div class="bg-gray-50 rounded p-4 flex flex-col items-center">
+                <span class="text-xs text-gray-500 mb-1">Stok Tertinggi</span>
+                <span class="text-lg font-bold text-[#00a8a8]">
+                    140
+                </span>
+            </div>
+            <div class="bg-gray-50 rounded p-4 flex flex-col items-center">
+                <span class="text-xs text-gray-500 mb-1">Stok Terendah</span>
+                <span class="text-lg font-bold text-[#00a8a8]">
+                    20
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Tabel Ringkasan Produk -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fas fa-list text-[#00a8a8]"></i>
+                Ringkasan Produk
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-slate-900">
+                    <thead class="bg-slate-100">
+                        <tr>
+                            <th class="p-3 border-b border-slate-200">Kode</th>
+                            <th class="p-3 border-b border-slate-200">Nama Produk</th>
+                            <th class="p-3 border-b border-slate-200 text-center">Kategori</th>
+                            <th class="p-3 border-b border-slate-200 text-center">Stok</th>
+                            <th class="p-3 border-b border-slate-200 text-center">Satuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-3 border-b border-slate-200">PRD-001</td>
+                            <td class="p-3 border-b border-slate-200">Produk A</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Elektronik</td>
+                            <td class="p-3 border-b border-slate-200 text-center">25</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Unit</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border-b border-slate-200">PRD-002</td>
+                            <td class="p-3 border-b border-slate-200">Produk B</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Aksesoris</td>
+                            <td class="p-3 border-b border-slate-200 text-center">12</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Unit</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 border-b border-slate-200">PRD-003</td>
+                            <td class="p-3 border-b border-slate-200">Produk C</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Peralatan</td>
+                            <td class="p-3 border-b border-slate-200 text-center">0</td>
+                            <td class="p-3 border-b border-slate-200 text-center">Unit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    // Sidebar Inventory submenu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inventory submenu
+        const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+        const inventorySubmenu = document.getElementById('inventorySubmenu');
+        const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+        if (inventoryMenuBtn && inventorySubmenu && inventoryMenuIcon) {
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+        const inventorySubmenuItems = document.querySelectorAll('#inventorySubmenu .sidebar-item');
+        inventorySubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                inventorySubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation();
+            });
+        });
+        // Sales submenu (agar bisa toggle juga)
+        const salesMenuBtn = document.getElementById('salesMenuBtn');
+        const salesSubmenu = document.getElementById('salesSubmenu');
+        const salesMenuIcon = document.getElementById('salesMenuIcon');
+        if (salesMenuBtn && salesSubmenu && salesMenuIcon) {
+            salesMenuBtn.addEventListener('click', function() {
+                salesSubmenu.classList.toggle('hidden');
+                salesMenuIcon.classList.toggle('rotate-180');
+            });
+        }
+        const salesSubmenuItems = document.querySelectorAll('#salesSubmenu .sidebar-item');
+        salesSubmenuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                salesSubmenuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                e.stopPropagation();
+            });
+        });
+
+        const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+    const currentPage = window.location.pathname.split("/").pop();
+
+    // Daftar halaman di tiap submenu
+    const menus = {
+      procurement: [
+        "purchaserequest.html",
+        "purchaseorder.html",
+        "goodsreceipt.html",
+        "managesupplier.html"
+      ],
+      sales: [
+        "orderlist.html",
+        "neworder.html",
+        "invoices.html",
+        "customer.html"
+      ],
+      inventory: [
+        "manageproduct.html",
+        "stockmanage.html"
+      ]
+    };
+
+    // Procurement
+    if (menus.procurement.includes(currentPage)) {
+      document.getElementById("procurementSubmenu")?.classList.remove("hidden");
+      document.getElementById("procurementMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Sales
+    if (menus.sales.includes(currentPage)) {
+      document.getElementById("salesSubmenu")?.classList.remove("hidden");
+      document.getElementById("salesMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Inventory
+    if (menus.inventory.includes(currentPage)) {
+      document.getElementById("inventorySubmenu")?.classList.remove("hidden");
+      document.getElementById("inventoryMenuIcon")?.classList.add("rotate-180");
+    }
+
+    // Tambahan: Tandai item submenu yang sedang aktif
+    const links = document.querySelectorAll(".sidebar-item");
+    links.forEach(link => {
+      if (link.href.includes(currentPage)) {
+        link.classList.add("bg-white", "text-[#00a8a8]", "font-bold", "rounded-md");
+      }
+    });
+  });
+
+    </script>
+</body>
+</html>

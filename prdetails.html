@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Request Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F7FA;
+        }
+        
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-item:hover {
+            background-color: rgba(0, 168, 168, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background-color: rgba(0, 168, 168, 0.2);
+            border-left: 4px solid #00A8A8;
+        }
+        :root {
+            --primary-color: #00a8a8;
+            --primary-light: #e0f7f7;
+            --primary-dark: #007575;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+        
+        .text-primary {
+            color: var(--primary-color);
+        }
+        
+        .border-primary {
+            border-color: var(--primary-color);
+        }
+        
+        .hover\:bg-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .status-approved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .table-row:hover {
+            background-color: var(--primary-light);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="h-screen bg-gray-100">
+    <div class="flex h-full">
+     <!-- Sidebar -->
+    <div class="sidebar w-64 bg-[#00a8a8] flex flex-col border-r border-gray-200">
+        <!-- Logo -->
+        <div class="flex items-center justify-center py-4 px-4 border-b border-gray-200">
+        <img src="logo_prisma.png" alt="Logo" class="w-8 h-8 mr-2 object-contain" />
+        <h1 class="text-xl font-bold text-white">PRISMA</h1>
+    </div>
+        
+        <!-- Menu Items -->
+        <div class="flex-1 overflow-y-auto py-2">
+            <a href="dashboard.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <i class="fas fa-tachometer-alt mr-3 text-sm"></i>
+                <span class="text-sm">Dashboard</span>
+            </a>
+            
+            <!-- Sales Menu - Active -->
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="salesMenuBtn">
+            <div class="flex items-center" onclick="window.location.href='sales.html'">
+                <i class="fas fa-shopping-cart mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Sales</span>
+            </div>
+            <i class="fas fa-chevron-down transition-transform" id="salesMenuIcon" onclick="toggleSalesMenu(event)"></i>
+        </div>
+        <div id="salesSubmenu" class="ml-8 py-1 hidden">
+             <a href="orderlist.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-list-ul mr-3 text-xs"></i>
+                        <span>Daftar Pesanan</span>
+                    </a>
+                    <a href="neworder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-plus-circle mr-3 text-xs"></i>
+                        <span>Pesanan Baru</span>
+                    </a>
+                    <a href="invoices.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-invoice mr-3 text-xs"></i>
+                        <span>Faktur</span>
+                    </a>
+                    <a href="customer.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-users mr-3 text-xs"></i>
+                        <span>Pelanggan</span>
+                    </a>
+        </div>
+                <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white-600 hover:text-white cursor-pointer" id="inventoryMenuBtn">
+                    <div class="flex items-center" onclick="window.location.href='inventory.html'">
+                        <i class="fas fa-boxes mr-3 text-sm"></i>
+                        <span class="text-sm font-medium">Inventory</span>
+                    </div>
+                    <i class="fas fa-chevron-down transition-transform" id="inventoryMenuIcon" onclick="toggleInventoryMenu(event)"></i>
+                </div>
+                <div id="inventorySubmenu" class="ml-8 py-1 hidden">
+                    <a href="manageproduct.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-cube mr-3 text-xs"></i>
+                <span>Manajemen Produk</span>
+            </a>
+            <a href="stockmanage.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                <i class="fas fa-warehouse mr-3 text-xs"></i>
+                <span>Pengelolaan Stok</span>
+            </a>
+                </div>    
+            <div class="sidebar-item flex items-center justify-between py-2 px-4 text-white hover:text-white cursor-pointer" id="procurementMenuBtn">
+                <div class="flex items-center" onclick="window.location.href='procurement.html'">
+                <i class="fas fa-shopping-bag mr-3 text-sm"></i>
+                <span class="text-sm font-medium">Procurement</span>
+                </div>
+                <i class="fas fa-chevron-down transition-transform" id="procurementMenuIcon" onclick="toggleProcurementMenu(event)"></i>
+            </div>
+
+            <div id="procurementSubmenu" class="ml-8 py-1">
+                    <a href= "purchaserequest.html" class="sidebar-item flex items-center py-2 px-4 text-white hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-alt mr-3 text-xs"></i>
+                        <span>Permintaan Pembelian</span>
+                    </a>
+                    <a href="purchaseorder.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-file-signature mr-3 text-xs"></i>
+                        <span>Pesanan Pembelian</span>
+                    </a>
+                    <a href="goodsreceipt.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-truck-loading mr-3 text-xs"></i>
+                        <span>Penerimaan Barang</span>
+                    </a>
+                    <a href="managesupplier.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer text-sm">
+                        <i class="fas fa-user-tie mr-3 text-xs"></i>
+                        <span>Manajemen Supplier</span>
+                    </a>
+                </div> 
+            <a href="reports.html" class="sidebar-item flex items-center py-2 px-4 text-white-600 hover:text-white cursor-pointer">
+                <div class="flex items-center"></div>
+                <i class="fas fa-chart-bar mr-3 text-sm"></i>
+                <span class="text-sm">Laporan</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 bg-gray-100 overflow-y-auto">
+        <!-- Header Section -->
+        <header class="border-b border-gray-200 py-2 px-2 mb-4">
+        <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-white-600">Purchase Request Detail</h2>
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <input type="month" id="month-selector" class="border rounded p-2" value="2025-06">
+                <button class="btn-primary px-4 py-2 rounded" onclick="filterByMonth()">Terapkan Filter</button>
+            </div>
+            </div>
+        </header>
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Permintaan</p>
+                        <p class="text-2xl font-bold">24</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-list-ul text-blue-500"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Menunggu</p>
+                        <p class="text-2xl font-bold">8</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-hourglass-half text-yellow-500"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Disetujui</p>
+                        <p class="text-2xl font-bold">14</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded shadow">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Ditolak</p>
+                        <p class="text-2xl font-bold">2</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-times-circle text-red-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Purchase Request Table -->
+        <div class="bg-white rounded shadow overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-800">Daftar Permintaan Pembelian</h2>
+                <button class="btn-primary px-4 py-2 rounded"  onclick="window.location.href='purchaserequest.html'">+ Buat Permintaan</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Permintaan</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pengaju</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departemen</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Biaya</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-primary">PR-2025-001</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Jun 1, 2025</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Amanda Sri Rejeki Danmakasih</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Departemen IT</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Rp20.375.000</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full status-approved">Diterima</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                                <button onclick="showDetail('PR-2025-001')" class="font-medium hover:underline">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-primary">PR-2025-002</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Jun 3, 2025</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Reski Nuraliah</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Keuangan</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Rp55.746.000</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full status-approved">Diterima</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                                <button onclick="showDetail('PR-2025-002')" class="font-medium hover:underline">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-primary">PR-2025-003</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Jun 5, 2025</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Nur Fadillah</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Operasional</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Rp13.855.000</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full status-pending">Menunggu</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                                <button onclick="showDetail('PR-2025-003')" class="font-medium hover:underline">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-primary">PR-2025-004</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Jun 8, 2025</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Nurhan</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">HR</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Rp35.045.000</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full status-rejected">Ditolak</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                                <button onclick="showDetail('PR-2025-004')" class="font-medium hover:underline">Lihat Detail</button>
+                            </td>
+                        </tr>
+                        <tr class="table-row">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="text-sm font-medium text-primary">PR-2025-005</div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Jun 12, 2025</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">David Wilson</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Pemasaran</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900">Rp92.910.000</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs rounded-full status-approved">Diterima</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">
+                                <button onclick="showDetail('PR-2025-005')" class="font-medium hover:underline">Lihat Detail</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="mt-4 flex items-center justify-between">
+            <div class="text-sm text-gray-500">
+                Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">5</span> dari <span class="font-medium">24</span> hasil
+            </div>
+            <div class="flex space-x-1">
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">Previous</button>
+                <button class="px-3 py-1 border rounded bg-primary text-white">1</button>
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">2</button>
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">3</button>
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">4</button>
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">5</button>
+                <button class="px-3 py-1 border rounded text-gray-700 bg-white">Next</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detail Modal -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-primary">Detail Permintaan Pembelian</h2>
+                <span class="close text-2xl cursor-pointer" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <!-- Header Info -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">ID Permintaan</div>
+                    <div id="detail-id" class="font-medium text-primary">PR-2025-001</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">Tanggal Permintaan</div>
+                    <div id="detail-date" class="font-medium">Jun 1, 2025</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">Status</div>
+                    <div id="detail-status"><span class="px-2 py-1 text-xs rounded-full status-approved">Diterima</span></div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">Pengaju</div>
+                    <div id="detail-requester" class="font-medium">Amanda Sri Rejeki Danmakasih</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">Departemen</div>
+                    <div id="detail-dept" class="font-medium">Departemen IT</div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <div class="text-sm text-gray-500">Total Biaya</div>
+                    <div id="detail-total" class="font-medium">Rp20.375.000</div>
+                </div>
+            </div>
+            
+            <!-- Items Table -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">Item yang Diminta</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Unit</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detail-items" class="bg-white divide-y divide-gray-200">
+                            <!-- Items will be added by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Notes and Approvals -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">Justifikasi</h3>
+                    <p id="detail-justification" class="text-gray-700">
+                        Perlu mengganti monitor yang sudah usang untuk tim pengembangan guna meningkatkan produktivitas dan mengurangi ketegangan mata.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">Persetujuan</h3>
+                    <div id="detail-approvals" class="space-y-2">
+                        <!-- Approvals will be added by JavaScript -->
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="font-medium">Kevin Daves</span>
+                                <div class="text-sm text-gray-500">Kepala Departemen</div>
+                            </div>
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Disetujui</span>
+                            <div class="text-sm text-gray-500">Jun 2, 2025</div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="font-medium">Mary Poppins</span>
+                                <div class="text-sm text-gray-500">Keuangan</div>
+                            </div>
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Disetujui</span>
+                            <div class="text-sm text-gray-500">Jun 3, 2025</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end mt-6 space-x-3">
+                <button class="px-4 py-2 border rounded text-gray-700 bg-white" onclick="closeModal()">Tutup</button>
+                <button class="px-4 py-2 rounded text-white bg-red-600 hover:bg-red-700">Tolak</button>
+                <button class="px-4 py-2 rounded text-white bg-green-600 hover:bg-green-700">Setuju</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Modal Functions
+        function showDetail(id) {
+            // In a real application, you would fetch the detailed data from the server based on the ID
+            // For this demo, we'll just use sample data
+            
+            const modal = document.getElementById('detailModal');
+            modal.style.display = 'block';
+            
+            // Update the modal with sample data (simulating a data fetch)
+            document.getElementById('detail-id').textContent = id;
+            
+            // Generate sample items for the detail view
+            const itemsContainer = document.getElementById('detail-items');
+            itemsContainer.innerHTML = '';
+            
+            // Sample items data (would come from API in real app)
+            let sampleItems = [];
+            if (id === 'PR-2025-001') {
+                sampleItems = [
+                    { name: '24" Monitor', description: 'Dell 24" Full HD Monitor', qty: 5, price: 4075000 },
+                    { name: '27" Monitor', description: 'LG 27" Ultra HD Monitor', qty: 5, price: 7500000 },
+                    { name: 'Keyboard', description: 'Mechanical Keyboard', qty: 5, price: 1000000 },
+                    { name: 'Mouse', description: 'Wireless Mouse', qty: 5, price: 500000 },
+                    { name: 'HDMI Cable', description: 'High-speed HDMI cable', qty: 5, price: 150000 },
+                    { name: 'Monitor Stand', description: 'Adjustable VESA mount', qty: 5, price: 500000 },
+                ];
+                document.getElementById('detail-date').textContent = 'Jun 1, 2025';
+                document.getElementById('detail-status').innerHTML = '<span class="px-2 py-1 text-xs rounded-full status-approved">Disetujui</span>';
+                document.getElementById('detail-requester').textContent = 'Amanda Sri Rejeki Danmakasih';
+                document.getElementById('detail-dept').textContent = 'Departemen IT';
+                document.getElementById('detail-total').textContent = 'Rp20.375.000';
+                document.getElementById('detail-justification').textContent = 'Perlu mengganti monitor yang sudah usang untuk tim pengembangan guna meningkatkan produktivitas dan mengurangi ketegangan mata.';
+            } else if (id === 'PR-2025-002') {
+                sampleItems = [
+                    { name: 'Laptop', description: 'MacBook Pro 16"', qty: 1, price: 40733000 },
+                    { name: 'Docking Station', description: 'USB-C Dual Monitor Dock', qty: 1, price: 3243000 },
+                    { name: 'Wireless Mouse', description: 'Logitech MX Master 3', qty: 1, price: 1621000 },
+                    { name: 'Keyboard', description: 'Apple Magic Keyboard', qty: 1, price: 1500000 },
+                    { name: 'Monitor', description: 'LG UltraFine 5K', qty: 1, price: 25000000 }
+                ];
+                document.getElementById('detail-date').textContent = 'Jun 3, 2025';
+                document.getElementById('detail-status').innerHTML = '<span class="px-2 py-1 text-xs rounded-full status-approved">Disetujui</span>';
+                document.getElementById('detail-requester').textContent = 'Reski Nuraliah';
+                document.getElementById('detail-dept').textContent = 'Keuangan';
+                document.getElementById('detail-total').textContent = 'Rp55.746.000';
+                document.getElementById('detail-justification').textContent = 'Upgrade peralatan kerja untuk meningkatkan efisiensi tim keuangan.';
+            } else if (id === 'PR-2025-003') {
+                sampleItems = [
+                    { name: 'Office Chair', description: 'Ergonomic Executive Chair', qty: 2, price: 4873000 },
+                    { name: 'Desk', description: 'Standing Desk 60x30"', qty: 1, price: 6503000 },
+                    { name: 'Monitor Arm', description: 'Dual Monitor Mount', qty: 1, price: 1613000 },
+                    { name: 'Desk Lamp', description: 'LED Desk Lamp with USB', qty: 1, price: 500000 },
+                    { name: 'Cable Management', description: 'Cable Tray and Clips', qty: 1, price: 250000 }
+                ];
+                document.getElementById('detail-date').textContent = 'Jun 5, 2025';
+                document.getElementById('detail-status').innerHTML = '<span class="px-2 py-1 text-xs rounded-full status-pending">Menunggu</span>';
+                document.getElementById('detail-requester').textContent = 'Nur Fadillah';
+                document.getElementById('detail-dept').textContent = 'Operasional';
+                document.getElementById('detail-total').textContent = 'Rp13.855.000';
+                document.getElementById('detail-justification').textContent = 'Perlu peralatan baru untuk meningkatkan kenyamanan dan produktivitas tim operasional.';
+            }
+            
+            // Add the items to the table
+            sampleItems.forEach(item => {
+                const row = document.createElement('tr');
+                row.classList.add('hover:bg-gray-50');
+                
+                const total = item.qty * item.price;
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${item.name}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm text-gray-900">${item.description}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${item.qty}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">Rp${item.price.toFixed(2)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">Rp${total.toFixed(2)}</div>
+                    </td>
+                `;
+                
+                itemsContainer.appendChild(row);
+            });
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('detailModal');
+            modal.style.display = 'none';
+        }
+        
+        function filterByMonth() {
+            const monthSelector = document.getElementById('month-selector');
+            alert(`Filtering by month: ${monthSelector.value}`);
+            // In a real application, this would trigger an API call to get data for the selected month
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const salesMenuBtn = document.getElementById('salesMenuBtn');
+            const salesSubmenu = document.getElementById('salesSubmenu');
+            const salesMenuIcon = document.getElementById('salesMenuIcon');
+
+        salesMenuBtn.addEventListener('click', function() {
+            salesSubmenu.classList.toggle('hidden');
+            salesMenuIcon.classList.toggle('rotate-180');
+        });
+    });
+        document.addEventListener('DOMContentLoaded', function() {
+            const inventoryMenuBtn = document.getElementById('inventoryMenuBtn');
+            const inventorySubmenu = document.getElementById('inventorySubmenu');
+            const inventoryMenuIcon = document.getElementById('inventoryMenuIcon');
+
+            inventoryMenuBtn.addEventListener('click', function() {
+                inventorySubmenu.classList.toggle('hidden');
+                inventoryMenuIcon.classList.toggle('rotate-180');
+            });
+
+            const procurementMenuBtn = document.getElementById('procurementMenuBtn');
+            const procurementSubmenu = document.getElementById('procurementSubmenu');
+            const procurementMenuIcon = document.getElementById('procurementMenuIcon');
+
+        procurementMenuBtn.addEventListener('click', function() {
+                procurementSubmenu.classList.toggle('hidden');
+                procurementMenuIcon.classList.toggle('rotate-180');
+            });
+        });
+
+        function toggleSalesMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('salesSubmenu');
+            const icon = document.getElementById('salesMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+            event.stopPropagation();
+            const submenu = document.getElementById('inventorySubmenu');
+            const icon = document.getElementById('inventoryMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        
+        function toggleProcurementMenu(event) {
+            event.stopPropagation();
+            const submenu = document.getElementById('procurementSubmenu');
+            const icon = document.getElementById('procurementMenuIcon');
+            submenu.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+    </script>
+</body>
+</html>
